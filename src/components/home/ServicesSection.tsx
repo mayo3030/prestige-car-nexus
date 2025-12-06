@@ -1,42 +1,42 @@
-import { Car, Gavel, Calculator, Shield, Truck, Headphones } from "lucide-react";
+import { Car, CreditCard, Calculator, Shield, Truck, Headphones } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const services = [
   {
     icon: Car,
-    title: "Buy Premium Vehicles",
-    description: "Browse our curated collection of luxury and exotic automobiles from trusted sellers worldwide.",
+    title: "Buy Quality Vehicles",
+    description: "Browse our curated collection of quality vehicles at wholesale prices from trusted dealerships.",
     href: "/inventory",
   },
   {
-    icon: Gavel,
-    title: "Live Auctions",
-    description: "Bid on exclusive vehicles in our live auction events with real-time updates and transparent pricing.",
-    href: "/auctions",
+    icon: CreditCard,
+    title: "Easy Credit Approval",
+    description: "Get approved quickly with our streamlined credit application process. Alternative down payments accepted!",
+    href: "/financing",
   },
   {
     icon: Calculator,
-    title: "Financing Solutions",
-    description: "Calculate your monthly payments and explore financing options tailored for luxury vehicle purchases.",
+    title: "Financing Calculator",
+    description: "Calculate your monthly payments and explore financing options tailored for your budget.",
     href: "/financing",
   },
   {
     icon: Shield,
     title: "Vehicle Inspections",
-    description: "Every vehicle undergoes a comprehensive 150-point inspection with detailed history reports.",
+    description: "Every vehicle undergoes a comprehensive inspection with detailed history reports for peace of mind.",
     href: "/inspection",
   },
   {
     icon: Truck,
-    title: "Global Delivery",
-    description: "Secure, enclosed transport to anywhere in the world with real-time tracking and full insurance.",
+    title: "Free Home Delivery",
+    description: "Get your new car delivered right to your doorstep at no extra cost. Nationwide delivery available.",
     href: "/shipping",
   },
   {
     icon: Headphones,
-    title: "Concierge Service",
-    description: "Dedicated specialists to guide you through every step of your purchase or sale experience.",
-    href: "/concierge",
+    title: "Expert Brokers",
+    description: "Our knowledgeable brokers help you choose the perfect model that fits your lifestyle and needs.",
+    href: "/contact",
   },
 ];
 
@@ -50,11 +50,11 @@ export function ServicesSection() {
             Our Services
           </span>
           <h2 className="text-3xl md:text-4xl font-display font-bold mt-2">
-            White-Glove Experience
+            Never Step Foot Into a Dealership
           </h2>
           <p className="text-muted-foreground mt-4">
-            From first inquiry to final delivery, we provide an unparalleled 
-            luxury experience for discerning automotive enthusiasts.
+            We handle everything from vehicle selection to delivery. 
+            Experience hassle-free car buying with Jersey Auto Lease.
           </p>
         </div>
 
@@ -64,7 +64,7 @@ export function ServicesSection() {
             <Link
               key={service.title}
               to={service.href}
-              className="group p-8 rounded-2xl bg-background border border-border hover:border-primary/50 transition-all duration-300 hover:gold-glow"
+              className="group p-8 rounded-2xl bg-background border border-border hover:border-primary/50 transition-all duration-300 card-hover"
             >
               <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
                 <service.icon className="h-7 w-7 text-primary" />
