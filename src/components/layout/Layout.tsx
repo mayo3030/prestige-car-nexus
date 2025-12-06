@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { Navbar } from "./Navbar";
 import { Footer } from "./Footer";
+import { ChatButton } from "@/components/ChatButton";
 
 interface LayoutProps {
   children: ReactNode;
@@ -12,6 +13,7 @@ export function Layout({ children }: LayoutProps) {
       <Navbar />
       <main className="flex-1 pt-20">{children}</main>
       <Footer />
+      <ChatButton />
     </div>
   );
 }
