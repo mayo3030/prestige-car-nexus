@@ -1,7 +1,7 @@
 import { MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const CHATBOT_URL = "https://opal.google/?flow=drive:/1XF0wQUk2Pwp6lD3teDoUHD9EEXxPJqSF&shared&mode=app";
+const CHATBOT_URL = "https://opal.google/?flow=drive:/1SyXIgHkIISLWFwHDlQno0uuifmkTlzU3&shared&mode=app";
 
 export function ChatButton() {
   const handleClick = () => {
