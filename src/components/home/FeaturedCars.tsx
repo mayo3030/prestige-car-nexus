@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { ArrowRight, Heart, Gauge, Calendar, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
 
 interface Car {
   id: string;
@@ -15,84 +14,85 @@ interface Car {
   location: string;
   image: string;
   featured?: boolean;
-  auction?: boolean;
+  goodRate?: boolean;
 }
 
 const featuredCars: Car[] = [
   {
     id: "1",
-    title: "Ferrari SF90 Stradale",
-    make: "Ferrari",
-    model: "SF90 Stradale",
-    year: 2023,
-    price: 825000,
-    mileage: 1200,
-    location: "Beverly Hills, CA",
-    image: "https://images.unsplash.com/photo-1592198084033-aade902d1aae?q=80&w=2670",
+    title: "2017 Hyundai Tucson SUV",
+    make: "Hyundai",
+    model: "Tucson",
+    year: 2017,
+    price: 18500,
+    mileage: 45000,
+    location: "New Jersey",
+    image: "https://images.unsplash.com/photo-1633695634169-2df5c9b41b86?q=80&w=2671",
     featured: true,
   },
   {
     id: "2",
-    title: "Lamborghini Huracán EVO",
-    make: "Lamborghini",
-    model: "Huracán EVO",
-    year: 2022,
-    price: 389000,
-    mileage: 3500,
-    location: "Miami, FL",
-    image: "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?q=80&w=2574",
+    title: "2019 Toyota Camry SE",
+    make: "Toyota",
+    model: "Camry",
+    year: 2019,
+    price: 22900,
+    mileage: 38000,
+    location: "New Jersey",
+    image: "https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?q=80&w=2670",
+    goodRate: true,
   },
   {
     id: "3",
-    title: "Porsche 911 GT3 RS",
-    make: "Porsche",
-    model: "911 GT3 RS",
-    year: 2024,
-    price: 295000,
-    mileage: 850,
-    location: "New York, NY",
-    image: "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?q=80&w=2670",
-    auction: true,
+    title: "2020 Honda Accord Sport",
+    make: "Honda",
+    model: "Accord",
+    year: 2020,
+    price: 26500,
+    mileage: 28000,
+    location: "New Jersey",
+    image: "https://images.unsplash.com/photo-1606611013016-969c19ba27bb?q=80&w=2574",
   },
   {
     id: "4",
-    title: "Rolls-Royce Phantom",
-    make: "Rolls-Royce",
-    model: "Phantom",
-    year: 2023,
-    price: 475000,
-    mileage: 2100,
-    location: "Las Vegas, NV",
-    image: "https://images.unsplash.com/photo-1563720360172-67b8f3dce741?q=80&w=2574",
+    title: "2018 BMW 3 Series",
+    make: "BMW",
+    model: "3 Series",
+    year: 2018,
+    price: 28900,
+    mileage: 52000,
+    location: "New Jersey",
+    image: "https://images.unsplash.com/photo-1555215695-3004980ad54e?q=80&w=2670",
+    featured: true,
   },
   {
     id: "5",
-    title: "McLaren 720S Spider",
-    make: "McLaren",
-    model: "720S Spider",
-    year: 2022,
-    price: 345000,
-    mileage: 4200,
-    location: "Scottsdale, AZ",
-    image: "https://images.unsplash.com/photo-1621135802920-133df287f89c?q=80&w=2574",
+    title: "2021 Kia Seltos LX",
+    make: "Kia",
+    model: "Seltos",
+    year: 2021,
+    price: 24200,
+    mileage: 19000,
+    location: "New Jersey",
+    image: "https://images.unsplash.com/photo-1609521263047-f8f205293f24?q=80&w=2580",
+    goodRate: true,
   },
   {
     id: "6",
-    title: "Bentley Continental GT",
-    make: "Bentley",
-    model: "Continental GT",
-    year: 2023,
-    price: 265000,
-    mileage: 1800,
-    location: "Chicago, IL",
-    image: "https://images.unsplash.com/photo-1580274455191-1c62238fa333?q=80&w=2564",
-    featured: true,
+    title: "2019 Mazda CX-5 Touring",
+    make: "Mazda",
+    model: "CX-5",
+    year: 2019,
+    price: 25800,
+    mileage: 35000,
+    location: "New Jersey",
+    image: "https://images.unsplash.com/photo-1612544448445-b8232cff3b6c?q=80&w=2574",
   },
 ];
 
 function CarCard({ car }: { car: Car }) {
   return (
-    <div className="group relative glass-card rounded-2xl overflow-hidden luxury-border transition-all duration-500 hover:gold-glow">
+    <div className="group relative glass-card rounded-2xl overflow-hidden luxury-border transition-all duration-500 card-hover">
       {/* Image */}
       <div className="relative aspect-[4/3] overflow-hidden">
         <img
@@ -107,9 +107,9 @@ function CarCard({ car }: { car: Car }) {
           {car.featured && (
             <Badge className="bg-primary text-primary-foreground">Featured</Badge>
           )}
-          {car.auction && (
-            <Badge variant="secondary" className="bg-destructive/90 text-destructive-foreground">
-              Live Auction
+          {car.goodRate && (
+            <Badge variant="secondary" className="bg-cyan text-background">
+              Good Rate
             </Badge>
           )}
         </div>
@@ -155,7 +155,7 @@ function CarCard({ car }: { car: Car }) {
             </div>
           </div>
           <Link to={`/vehicle/${car.id}`}>
-            <Button variant="outline" size="sm" className="gap-1.5 border-primary/30 hover:bg-primary hover:text-primary-foreground">
+            <Button variant="outline" size="sm" className="gap-1.5 border-primary/30 hover:bg-primary hover:text-primary-foreground rounded-full">
               View Details
               <ArrowRight className="h-4 w-4" />
             </Button>
@@ -177,15 +177,15 @@ export function FeaturedCars() {
               Featured Collection
             </span>
             <h2 className="text-3xl md:text-4xl font-display font-bold mt-2">
-              Exceptional Automobiles
+              Wholesale Pricing on All Makes/Models
             </h2>
             <p className="text-muted-foreground mt-2 max-w-xl">
-              Hand-picked selection of the world's most desirable vehicles, 
-              each one meticulously inspected and verified.
+              Browse our selection of quality vehicles with free home delivery. 
+              Never step foot into a dealership!
             </p>
           </div>
           <Link to="/inventory">
-            <Button variant="outline" className="gap-2 border-primary/30 hover:bg-primary hover:text-primary-foreground">
+            <Button variant="outline" className="gap-2 border-primary/30 hover:bg-primary hover:text-primary-foreground rounded-full">
               View All Inventory
               <ArrowRight className="h-4 w-4" />
             </Button>

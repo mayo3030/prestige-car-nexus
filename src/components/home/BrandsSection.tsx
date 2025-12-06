@@ -1,14 +1,14 @@
 const brands = [
-  { name: "Ferrari", logo: "🏎️" },
-  { name: "Lamborghini", logo: "🦁" },
-  { name: "Porsche", logo: "🔰" },
-  { name: "Rolls-Royce", logo: "👑" },
-  { name: "Bentley", logo: "🦅" },
-  { name: "McLaren", logo: "⚡" },
-  { name: "Aston Martin", logo: "🎯" },
-  { name: "Bugatti", logo: "💎" },
-  { name: "Mercedes-AMG", logo: "⭐" },
-  { name: "BMW M", logo: "🏁" },
+  { name: "Toyota", logo: "🚗" },
+  { name: "Honda", logo: "🏎️" },
+  { name: "Hyundai", logo: "🚙" },
+  { name: "BMW", logo: "🔵" },
+  { name: "Nissan", logo: "⭕" },
+  { name: "Ford", logo: "🔷" },
+  { name: "Chevrolet", logo: "➕" },
+  { name: "Kia", logo: "🔶" },
+  { name: "Mazda", logo: "Ⓜ️" },
+  { name: "Mercedes", logo: "⭐" },
 ];
 
 export function BrandsSection() {
@@ -17,10 +17,10 @@ export function BrandsSection() {
       <div className="container mx-auto px-4">
         <div className="text-center mb-10">
           <span className="text-primary text-sm font-medium uppercase tracking-wider">
-            Trusted By The Best
+            All Makes & Models
           </span>
           <h2 className="text-2xl md:text-3xl font-display font-bold mt-2">
-            World-Class Marques
+            Browse By Brand
           </h2>
         </div>
 

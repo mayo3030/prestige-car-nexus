@@ -1,32 +1,31 @@
 import { Link } from "react-router-dom";
-import { Car, Mail, Phone, MapPin, Facebook, Instagram, Twitter, Youtube } from "lucide-react";
+import { Mail, Phone, MapPin, Facebook, Instagram, Twitter, Youtube } from "lucide-react";
+import logo from "@/assets/jersey-auto-lease-logo.png";
 
 const footerLinks = {
   inventory: [
     { label: "Browse All Cars", href: "/inventory" },
-    { label: "Luxury Sedans", href: "/inventory?type=sedan" },
-    { label: "Sports Cars", href: "/inventory?type=sports" },
+    { label: "Sedans", href: "/inventory?type=sedan" },
     { label: "SUVs & Crossovers", href: "/inventory?type=suv" },
-    { label: "Classic Cars", href: "/inventory?type=classic" },
+    { label: "Trucks", href: "/inventory?type=truck" },
+    { label: "Specials", href: "/inventory?type=specials" },
   ],
   services: [
     { label: "Sell Your Car", href: "/sell" },
     { label: "Auctions", href: "/auctions" },
     { label: "Financing", href: "/financing" },
-    { label: "Concierge Service", href: "/concierge" },
+    { label: "Credit Application", href: "/financing" },
     { label: "Vehicle Inspection", href: "/inspection" },
   ],
   company: [
     { label: "About Us", href: "/about" },
-    { label: "Contact", href: "/contact" },
-    { label: "Careers", href: "/careers" },
-    { label: "Press", href: "/press" },
-    { label: "Blog", href: "/blog" },
+    { label: "Contact Us", href: "/contact" },
+    { label: "Specials", href: "/specials" },
+    { label: "Inventory", href: "/inventory" },
   ],
   legal: [
     { label: "Privacy Policy", href: "/privacy" },
     { label: "Terms of Service", href: "/terms" },
-    { label: "Cookie Policy", href: "/cookies" },
   ],
 };
 
@@ -39,32 +38,25 @@ export function Footer() {
           {/* Brand Column */}
           <div className="lg:col-span-2">
             <Link to="/" className="flex items-center gap-3 mb-6">
-              <Car className="h-8 w-8 text-primary" />
-              <div className="flex flex-col">
-                <span className="text-xl font-display font-bold tracking-wide">
-                  PRESTIGE
-                </span>
-                <span className="text-[10px] tracking-[0.3em] text-primary uppercase">
-                  Motors
-                </span>
-              </div>
+              <img src={logo} alt="Jersey Auto Lease" className="h-14 w-auto" />
             </Link>
             <p className="text-muted-foreground mb-6 max-w-sm">
-              The world's premier marketplace for luxury and exotic automobiles. 
-              Experience the art of automotive excellence.
+              We provide quality service to our clients who are looking to purchase a new car 
+              without the hassle of ever having to step foot at a car dealership. Wholesale 
+              pricing on all makes and models!
             </p>
             <div className="space-y-3">
               <div className="flex items-center gap-3 text-muted-foreground">
                 <MapPin className="h-5 w-5 text-primary" />
-                <span>Beverly Hills, California, USA</span>
+                <span>New Jersey, USA</span>
               </div>
               <div className="flex items-center gap-3 text-muted-foreground">
                 <Phone className="h-5 w-5 text-primary" />
-                <span>+1 (888) 555-0123</span>
+                <span>Contact us for details</span>
               </div>
               <div className="flex items-center gap-3 text-muted-foreground">
                 <Mail className="h-5 w-5 text-primary" />
-                <span>concierge@prestigemotors.com</span>
+                <span>info@jerseyautolease.com</span>
               </div>
             </div>
           </div>
@@ -128,7 +120,7 @@ export function Footer() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-6">
               <p className="text-sm text-muted-foreground">
-                © 2024 Prestige Motors. All rights reserved.
+                © 2024 Jersey Auto Lease. All rights reserved.
               </p>
               <div className="hidden md:flex items-center gap-4">
                 {footerLinks.legal.map((link) => (

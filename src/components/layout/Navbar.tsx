@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Car, User, Heart } from "lucide-react";
+import { Menu, X, User, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import logo from "@/assets/jersey-auto-lease-logo.png";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -10,8 +11,8 @@ const navLinks = [
   { href: "/auctions", label: "Auctions" },
   { href: "/sell", label: "Sell Your Car" },
   { href: "/financing", label: "Financing" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
+  { href: "/about", label: "About Us" },
+  { href: "/contact", label: "Contact Us" },
 ];
 
 export function Navbar() {
@@ -19,23 +20,16 @@ export function Navbar() {
   const location = useLocation();
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/50">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-xl border-b border-border/50">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 group">
-            <div className="relative">
-              <Car className="h-8 w-8 text-primary transition-transform group-hover:scale-110" />
-              <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-xl font-display font-bold tracking-wide text-foreground">
-                PRESTIGE
-              </span>
-              <span className="text-[10px] tracking-[0.3em] text-primary uppercase">
-                Motors
-              </span>
-            </div>
+            <img 
+              src={logo} 
+              alt="Jersey Auto Lease" 
+              className="h-12 w-auto transition-transform group-hover:scale-105"
+            />
           </Link>
 
           {/* Desktop Navigation */}
@@ -70,9 +64,11 @@ export function Navbar() {
             <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
               <User className="h-5 w-5" />
             </Button>
-            <Button className="bg-primary text-primary-foreground hover:bg-primary/90 px-6">
-              List Your Car
-            </Button>
+            <Link to="/financing">
+              <Button className="bg-primary text-primary-foreground hover:bg-primary/90 px-6 rounded-full">
+                Get Approved
+              </Button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -104,12 +100,14 @@ export function Navbar() {
                 </Link>
               ))}
               <div className="flex gap-3 mt-4 px-4">
-                <Button variant="outline" className="flex-1">
+                <Button variant="outline" className="flex-1 rounded-full">
                   Sign In
                 </Button>
-                <Button className="flex-1 bg-primary text-primary-foreground">
-                  List Your Car
-                </Button>
+                <Link to="/financing" className="flex-1">
+                  <Button className="w-full bg-primary text-primary-foreground rounded-full">
+                    Get Approved
+                  </Button>
+                </Link>
               </div>
             </nav>
           </div>

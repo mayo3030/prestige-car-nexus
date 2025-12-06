@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Search, ChevronDown } from "lucide-react";
+import { Search, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Link } from "react-router-dom";
 import {
   Select,
   SelectContent,
@@ -10,146 +10,169 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const makes = ["Ferrari", "Lamborghini", "Porsche", "Rolls-Royce", "Bentley", "McLaren", "Aston Martin", "Bugatti"];
+const makes = ["Toyota", "Honda", "Hyundai", "BMW", "Mercedes-Benz", "Nissan", "Ford", "Chevrolet", "Kia", "Mazda"];
 const priceRanges = [
-  { label: "Under $100K", value: "0-100000" },
-  { label: "$100K - $250K", value: "100000-250000" },
-  { label: "$250K - $500K", value: "250000-500000" },
-  { label: "$500K - $1M", value: "500000-1000000" },
-  { label: "$1M+", value: "1000000+" },
+  { label: "Under $15K", value: "0-15000" },
+  { label: "$15K - $25K", value: "15000-25000" },
+  { label: "$25K - $40K", value: "25000-40000" },
+  { label: "$40K - $60K", value: "40000-60000" },
+  { label: "$60K+", value: "60000+" },
 ];
 
 export function HeroSection() {
-  const [searchType, setSearchType] = useState<"buy" | "auction">("buy");
+  const [searchType, setSearchType] = useState<"buy" | "lease">("buy");
 
   return (
-    <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-background via-background/95 to-background">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1544636331-e26879cd4d9b?q=80&w=2574')] bg-cover bg-center opacity-20" />
+    <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden gradient-hero">
+      {/* Background Image */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=2583')] bg-cover bg-center opacity-30" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/50" />
       </div>
 
-      {/* Decorative Elements */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse" />
-      <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-primary/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }} />
+      {/* Decorative Glow */}
+      <div className="absolute top-1/3 left-0 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[150px] animate-glow" />
+      <div className="absolute bottom-0 right-1/4 w-[300px] h-[300px] bg-cyan/10 rounded-full blur-[100px]" />
 
       {/* Content */}
       <div className="relative container mx-auto px-4 py-20">
-        <div className="max-w-4xl mx-auto text-center">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-8 animate-fade-in">
-            <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-            <span className="text-sm text-primary font-medium">The Premier Luxury Auto Marketplace</span>
-          </div>
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
+          {/* Left Content */}
+          <div className="max-w-xl">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-display font-bold mb-6 animate-fade-in-up leading-tight">
+              Cars For Your{" "}
+              <span className="text-gradient">Budget.</span>
+            </h1>
 
-          {/* Headline */}
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-bold mb-6 animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
-            <span className="text-foreground">Discover Your</span>
-            <br />
-            <span className="luxury-text-gradient">Dream Machine</span>
-          </h1>
+            <p className="text-lg md:text-xl text-muted-foreground mb-8 animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
+              <strong className="text-foreground">Shift your car, not gears.</strong> Ease your path toward 
+              the fastest way to get approved. Get your mind as the car adapts intuitively 
+              to power the speed you need.
+            </p>
 
-          {/* Subheadline */}
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-12 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
-            Curated collection of the world's finest automobiles. Buy, sell, or bid on 
-            exceptional vehicles with our white-glove concierge service.
-          </p>
-
-          {/* Search Box */}
-          <div className="glass-card rounded-2xl p-6 max-w-3xl mx-auto gold-glow animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
-            {/* Tabs */}
-            <div className="flex gap-2 mb-6">
-              <button
-                onClick={() => setSearchType("buy")}
-                className={`px-6 py-2.5 rounded-lg text-sm font-medium transition-all ${
-                  searchType === "buy"
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-secondary text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                Buy Now
-              </button>
-              <button
-                onClick={() => setSearchType("auction")}
-                className={`px-6 py-2.5 rounded-lg text-sm font-medium transition-all ${
-                  searchType === "auction"
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-secondary text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                Auctions
-              </button>
+            <div className="flex flex-wrap gap-4 mb-10 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
+              <Link to="/financing">
+                <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2 rounded-full px-8">
+                  Get Approved
+                  <CheckCircle className="h-5 w-5" />
+                </Button>
+              </Link>
+              <Link to="/inventory">
+                <Button size="lg" variant="outline" className="rounded-full px-8 border-primary/30 hover:bg-primary hover:text-primary-foreground">
+                  Browse Inventory
+                </Button>
+              </Link>
             </div>
 
-            {/* Search Fields */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <Select>
-                <SelectTrigger className="h-12 bg-secondary border-border">
-                  <SelectValue placeholder="Select Make" />
-                </SelectTrigger>
-                <SelectContent>
-                  {makes.map((make) => (
-                    <SelectItem key={make} value={make.toLowerCase()}>
-                      {make}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Select>
-                <SelectTrigger className="h-12 bg-secondary border-border">
-                  <SelectValue placeholder="Select Model" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Models</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <Select>
-                <SelectTrigger className="h-12 bg-secondary border-border">
-                  <SelectValue placeholder="Price Range" />
-                </SelectTrigger>
-                <SelectContent>
-                  {priceRanges.map((range) => (
-                    <SelectItem key={range.value} value={range.value}>
-                      {range.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Button className="h-12 bg-primary text-primary-foreground hover:bg-primary/90 gap-2">
-                <Search className="h-4 w-4" />
-                Search
-              </Button>
+            {/* Stats */}
+            <div className="flex flex-wrap gap-8 animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
+              <div>
+                <div className="text-3xl md:text-4xl font-display font-bold text-primary">8,000+</div>
+                <div className="text-sm text-muted-foreground">Cars Available Online</div>
+              </div>
+              <div>
+                <div className="text-3xl md:text-4xl font-display font-bold text-primary">150</div>
+                <div className="text-sm text-muted-foreground">Dealerships Across Country</div>
+              </div>
+              <div>
+                <div className="text-3xl md:text-4xl font-display font-bold text-primary">1,000+</div>
+                <div className="text-sm text-muted-foreground">Satisfied Customers</div>
+              </div>
             </div>
           </div>
 
-          {/* Stats */}
-          <div className="flex flex-wrap justify-center gap-8 md:gap-16 mt-12 animate-fade-in-up" style={{ animationDelay: "0.4s" }}>
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-display font-bold text-primary">2,500+</div>
-              <div className="text-sm text-muted-foreground">Premium Vehicles</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-display font-bold text-primary">$2.5B+</div>
-              <div className="text-sm text-muted-foreground">Total Sales</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-display font-bold text-primary">15K+</div>
-              <div className="text-sm text-muted-foreground">Happy Clients</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-display font-bold text-primary">50+</div>
-              <div className="text-sm text-muted-foreground">Countries Served</div>
+          {/* Right - Search Box */}
+          <div className="animate-fade-in-up" style={{ animationDelay: "0.4s" }}>
+            <div className="glass-card rounded-3xl p-8 coral-glow">
+              <h2 className="text-2xl font-display font-bold mb-6">Find Your Perfect Car</h2>
+              
+              {/* Tabs */}
+              <div className="flex gap-2 mb-6">
+                <button
+                  onClick={() => setSearchType("buy")}
+                  className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all ${
+                    searchType === "buy"
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-secondary text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  Buy
+                </button>
+                <button
+                  onClick={() => setSearchType("lease")}
+                  className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all ${
+                    searchType === "lease"
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-secondary text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  Lease
+                </button>
+              </div>
+
+              {/* Search Fields */}
+              <div className="space-y-4">
+                <Select>
+                  <SelectTrigger className="h-12 bg-secondary border-border rounded-xl">
+                    <SelectValue placeholder="Select Make" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {makes.map((make) => (
+                      <SelectItem key={make} value={make.toLowerCase()}>
+                        {make}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                <Select>
+                  <SelectTrigger className="h-12 bg-secondary border-border rounded-xl">
+                    <SelectValue placeholder="Select Model" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Models</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Select>
+                  <SelectTrigger className="h-12 bg-secondary border-border rounded-xl">
+                    <SelectValue placeholder="Price Range" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {priceRanges.map((range) => (
+                      <SelectItem key={range.value} value={range.value}>
+                        {range.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                <Button className="w-full h-12 bg-primary text-primary-foreground hover:bg-primary/90 gap-2 rounded-xl">
+                  <Search className="h-5 w-5" />
+                  Search Vehicles
+                </Button>
+              </div>
+
+              {/* Highlights */}
+              <div className="mt-6 pt-6 border-t border-border">
+                <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
+                  <span className="flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4 text-primary" />
+                    Wholesale Pricing
+                  </span>
+                  <span className="flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4 text-primary" />
+                    Free Delivery
+                  </span>
+                  <span className="flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4 text-primary" />
+                    No Dealership Visit
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-float">
-          <ChevronDown className="h-8 w-8 text-primary/50" />
         </div>
       </div>
     </section>
