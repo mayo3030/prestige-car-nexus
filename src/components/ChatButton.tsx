@@ -3,6 +3,7 @@ import { MessageCircle, X, Send, Bot, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useToast } from "@/components/ui/use-toast";
 
 interface Message {
   id: number;
@@ -20,20 +21,112 @@ const INITIAL_MESSAGES: Message[] = [
   },
 ];
 
-const BOT_RESPONSES = [
-  "Thank you for your interest! Our team specializes in luxury vehicle leasing. Would you like to know more about our current inventory?",
-  "Great question! We offer competitive financing options and white-glove concierge service. A specialist will be happy to assist you.",
-  "I'd be happy to help you find your perfect vehicle. You can browse our inventory or schedule a consultation with our team.",
-  "Our team is available to answer any questions. Would you like me to connect you with a sales specialist?",
-  "Thank you for reaching out! For immediate assistance, please call us or fill out our contact form.",
-];
+const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
+
+type ChatMessage = { role: "user" | "assistant"; content: string };
+
+async function streamChat({
+  messages,
+  onDelta,
+  onDone,
+  onError,
+}: {
+  messages: ChatMessage[];
+  onDelta: (deltaText: string) => void;
+  onDone: () => void;
+  onError: (error: string) => void;
+}) {
+  try {
+    const resp = await fetch(CHAT_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+      },
+      body: JSON.stringify({ messages }),
+    });
+
+    if (!resp.ok) {
+      const errorData = await resp.json().catch(() => ({ error: "Request failed" }));
+      onError(errorData.error || "Something went wrong");
+      return;
+    }
+
+    if (!resp.body) {
+      onError("No response body");
+      return;
+    }
+
+    const reader = resp.body.getReader();
+    const decoder = new TextDecoder();
+    let textBuffer = "";
+    let streamDone = false;
+
+    while (!streamDone) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      textBuffer += decoder.decode(value, { stream: true });
+
+      let newlineIndex: number;
+      while ((newlineIndex = textBuffer.indexOf("\n")) !== -1) {
+        let line = textBuffer.slice(0, newlineIndex);
+        textBuffer = textBuffer.slice(newlineIndex + 1);
+
+        if (line.endsWith("\r")) line = line.slice(0, -1);
+        if (line.startsWith(":") || line.trim() === "") continue;
+        if (!line.startsWith("data: ")) continue;
+
+        const jsonStr = line.slice(6).trim();
+        if (jsonStr === "[DONE]") {
+          streamDone = true;
+          break;
+        }
+
+        try {
+          const parsed = JSON.parse(jsonStr);
+          const content = parsed.choices?.[0]?.delta?.content as string | undefined;
+          if (content) onDelta(content);
+        } catch {
+          textBuffer = line + "\n" + textBuffer;
+          break;
+        }
+      }
+    }
+
+    // Final flush
+    if (textBuffer.trim()) {
+      for (let raw of textBuffer.split("\n")) {
+        if (!raw) continue;
+        if (raw.endsWith("\r")) raw = raw.slice(0, -1);
+        if (raw.startsWith(":") || raw.trim() === "") continue;
+        if (!raw.startsWith("data: ")) continue;
+        const jsonStr = raw.slice(6).trim();
+        if (jsonStr === "[DONE]") continue;
+        try {
+          const parsed = JSON.parse(jsonStr);
+          const content = parsed.choices?.[0]?.delta?.content as string | undefined;
+          if (content) onDelta(content);
+        } catch {
+          /* ignore */
+        }
+      }
+    }
+
+    onDone();
+  } catch (error) {
+    console.error("Stream error:", error);
+    onError("Connection error. Please try again.");
+  }
+}
 
 export function ChatButton() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>(INITIAL_MESSAGES);
+  const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -41,8 +134,8 @@ export function ChatButton() {
     }
   }, [messages]);
 
-  const handleSend = () => {
-    if (!inputValue.trim()) return;
+  const handleSend = async () => {
+    if (!inputValue.trim() || isTyping) return;
 
     const userMessage: Message = {
       id: messages.length + 1,
@@ -51,21 +144,68 @@ export function ChatButton() {
       timestamp: new Date(),
     };
 
+    const newChatHistory: ChatMessage[] = [
+      ...chatHistory,
+      { role: "user", content: inputValue },
+    ];
+
     setMessages((prev) => [...prev, userMessage]);
+    setChatHistory(newChatHistory);
     setInputValue("");
     setIsTyping(true);
 
-    // Simulate bot response
-    setTimeout(() => {
-      const botResponse: Message = {
-        id: messages.length + 2,
-        text: BOT_RESPONSES[Math.floor(Math.random() * BOT_RESPONSES.length)],
-        sender: "bot",
-        timestamp: new Date(),
-      };
-      setMessages((prev) => [...prev, botResponse]);
-      setIsTyping(false);
-    }, 1500);
+    let assistantContent = "";
+
+    const updateAssistantMessage = (chunk: string) => {
+      assistantContent += chunk;
+      setMessages((prev) => {
+        const last = prev[prev.length - 1];
+        if (last?.sender === "bot" && last.id === userMessage.id + 1) {
+          return prev.map((m, i) =>
+            i === prev.length - 1 ? { ...m, text: assistantContent } : m
+          );
+        }
+        return [
+          ...prev,
+          {
+            id: userMessage.id + 1,
+            text: assistantContent,
+            sender: "bot" as const,
+            timestamp: new Date(),
+          },
+        ];
+      });
+    };
+
+    await streamChat({
+      messages: newChatHistory,
+      onDelta: updateAssistantMessage,
+      onDone: () => {
+        setIsTyping(false);
+        setChatHistory((prev) => [
+          ...prev,
+          { role: "assistant", content: assistantContent },
+        ]);
+      },
+      onError: (error) => {
+        setIsTyping(false);
+        toast({
+          title: "Error",
+          description: error,
+          variant: "destructive",
+        });
+        // Add fallback response
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: userMessage.id + 1,
+            text: "I apologize, but I'm having trouble connecting right now. Please try again or call us directly for assistance.",
+            sender: "bot",
+            timestamp: new Date(),
+          },
+        ]);
+      },
+    });
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -153,7 +293,7 @@ export function ChatButton() {
                         : "bg-muted text-foreground rounded-bl-md"
                     }`}
                   >
-                    <p className="text-sm leading-relaxed">{message.text}</p>
+                    <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.text}</p>
                     <span
                       className={`text-[10px] mt-1 block ${
                         message.sender === "user"
@@ -171,7 +311,7 @@ export function ChatButton() {
               ))}
 
               {/* Typing Indicator */}
-              {isTyping && (
+              {isTyping && messages[messages.length - 1]?.sender === "user" && (
                 <div className="flex items-end gap-2 animate-fade-in">
                   <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center text-primary">
                     <Bot className="h-4 w-4" />
@@ -197,18 +337,19 @@ export function ChatButton() {
                 onKeyDown={handleKeyPress}
                 placeholder="Type your message..."
                 className="flex-1 bg-muted/50 border-0 focus-visible:ring-1 focus-visible:ring-primary/50 rounded-full px-4"
+                disabled={isTyping}
               />
               <Button
                 onClick={handleSend}
                 size="icon"
                 className="rounded-full h-10 w-10 bg-primary hover:bg-primary/90 shrink-0"
-                disabled={!inputValue.trim()}
+                disabled={!inputValue.trim() || isTyping}
               >
                 <Send className="h-4 w-4" />
               </Button>
             </div>
             <p className="text-[10px] text-muted-foreground text-center mt-2">
-              Powered by Jersey Auto Lease
+              Powered by AI • Jersey Auto Lease
             </p>
           </div>
         </div>
