@@ -21,7 +21,7 @@ const INITIAL_MESSAGES: Message[] = [
   },
 ];
 
-const N8N_WEBHOOK_URL = "https://mayomina2020.app.n8n.cloud/webhook/auction-chatbot";
+const CHAT_PROXY_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/n8n-proxy`;
 
 type ChatMessage = { role: "user" | "assistant"; content: string };
 
@@ -37,7 +37,7 @@ async function sendChatMessage({
   try {
     const lastMessage = messages[messages.length - 1];
     
-    const resp = await fetch(N8N_WEBHOOK_URL, {
+    const resp = await fetch(CHAT_PROXY_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
