@@ -21,7 +21,7 @@ const INITIAL_MESSAGES: Message[] = [
   },
 ];
 
-const N8N_WEBHOOK_URL = "https://mayomina2020.app.n8n.cloud/webhook-test/auction-chatbot";
+const N8N_WEBHOOK_URL = "https://mayomina2020.app.n8n.cloud/webhook/auction-chatbot";
 
 type ChatMessage = { role: "user" | "assistant"; content: string };
 
