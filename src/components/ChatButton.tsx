@@ -21,100 +21,55 @@ const INITIAL_MESSAGES: Message[] = [
   },
 ];
 
-const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
+const N8N_WEBHOOK_URL = "https://mayomina2020.app.n8n.cloud/webhook-test/auction-chatbot";
 
 type ChatMessage = { role: "user" | "assistant"; content: string };
 
-async function streamChat({
+async function sendChatMessage({
   messages,
-  onDelta,
-  onDone,
+  onResponse,
   onError,
 }: {
   messages: ChatMessage[];
-  onDelta: (deltaText: string) => void;
-  onDone: () => void;
+  onResponse: (text: string) => void;
   onError: (error: string) => void;
 }) {
   try {
-    const resp = await fetch(CHAT_URL, {
+    const lastMessage = messages[messages.length - 1];
+    
+    const resp = await fetch(N8N_WEBHOOK_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
       },
-      body: JSON.stringify({ messages }),
+      body: JSON.stringify({
+        message: lastMessage.content,
+        chatHistory: messages,
+        sessionId: `session_${Date.now()}`,
+      }),
     });
 
     if (!resp.ok) {
-      const errorData = await resp.json().catch(() => ({ error: "Request failed" }));
-      onError(errorData.error || "Something went wrong");
+      const errorText = await resp.text().catch(() => "Request failed");
+      console.error("n8n webhook error:", errorText);
+      onError("Something went wrong. Please try again.");
       return;
     }
 
-    if (!resp.body) {
-      onError("No response body");
-      return;
-    }
-
-    const reader = resp.body.getReader();
-    const decoder = new TextDecoder();
-    let textBuffer = "";
-    let streamDone = false;
-
-    while (!streamDone) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      textBuffer += decoder.decode(value, { stream: true });
-
-      let newlineIndex: number;
-      while ((newlineIndex = textBuffer.indexOf("\n")) !== -1) {
-        let line = textBuffer.slice(0, newlineIndex);
-        textBuffer = textBuffer.slice(newlineIndex + 1);
-
-        if (line.endsWith("\r")) line = line.slice(0, -1);
-        if (line.startsWith(":") || line.trim() === "") continue;
-        if (!line.startsWith("data: ")) continue;
-
-        const jsonStr = line.slice(6).trim();
-        if (jsonStr === "[DONE]") {
-          streamDone = true;
-          break;
-        }
-
-        try {
-          const parsed = JSON.parse(jsonStr);
-          const content = parsed.choices?.[0]?.delta?.content as string | undefined;
-          if (content) onDelta(content);
-        } catch {
-          textBuffer = line + "\n" + textBuffer;
-          break;
-        }
-      }
-    }
-
-    // Final flush
-    if (textBuffer.trim()) {
-      for (let raw of textBuffer.split("\n")) {
-        if (!raw) continue;
-        if (raw.endsWith("\r")) raw = raw.slice(0, -1);
-        if (raw.startsWith(":") || raw.trim() === "") continue;
-        if (!raw.startsWith("data: ")) continue;
-        const jsonStr = raw.slice(6).trim();
-        if (jsonStr === "[DONE]") continue;
-        try {
-          const parsed = JSON.parse(jsonStr);
-          const content = parsed.choices?.[0]?.delta?.content as string | undefined;
-          if (content) onDelta(content);
-        } catch {
-          /* ignore */
-        }
-      }
-    }
-
-    onDone();
+    const data = await resp.json();
+    console.log("n8n response:", data);
+    
+    // Handle various response formats from n8n
+    const responseText = 
+      data.output || 
+      data.response || 
+      data.message || 
+      data.text ||
+      (typeof data === "string" ? data : JSON.stringify(data));
+    
+    onResponse(responseText);
   } catch (error) {
-    console.error("Stream error:", error);
+    console.error("Chat error:", error);
     onError("Connection error. Please try again.");
   }
 }
@@ -154,37 +109,22 @@ export function ChatButton() {
     setInputValue("");
     setIsTyping(true);
 
-    let assistantContent = "";
-
-    const updateAssistantMessage = (chunk: string) => {
-      assistantContent += chunk;
-      setMessages((prev) => {
-        const last = prev[prev.length - 1];
-        if (last?.sender === "bot" && last.id === userMessage.id + 1) {
-          return prev.map((m, i) =>
-            i === prev.length - 1 ? { ...m, text: assistantContent } : m
-          );
-        }
-        return [
+    await sendChatMessage({
+      messages: newChatHistory,
+      onResponse: (text) => {
+        setIsTyping(false);
+        setMessages((prev) => [
           ...prev,
           {
             id: userMessage.id + 1,
-            text: assistantContent,
-            sender: "bot" as const,
+            text: text,
+            sender: "bot",
             timestamp: new Date(),
           },
-        ];
-      });
-    };
-
-    await streamChat({
-      messages: newChatHistory,
-      onDelta: updateAssistantMessage,
-      onDone: () => {
-        setIsTyping(false);
+        ]);
         setChatHistory((prev) => [
           ...prev,
-          { role: "assistant", content: assistantContent },
+          { role: "assistant", content: text },
         ]);
       },
       onError: (error) => {
@@ -194,7 +134,6 @@ export function ChatButton() {
           description: error,
           variant: "destructive",
         });
-        // Add fallback response
         setMessages((prev) => [
           ...prev,
           {
