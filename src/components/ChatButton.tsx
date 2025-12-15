@@ -21,9 +21,13 @@ const INITIAL_MESSAGES: Message[] = [
   },
 ];
 
-const CHAT_PROXY_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/n8n-proxy`;
+// Knowledge Base API URL
+const API_URL = "https://8000-i9sqsgvlxjpy7al0ynwz7-d0b9e1e2.sandbox.novita.ai";
 
 type ChatMessage = { role: "user" | "assistant"; content: string };
+
+// Store session ID for conversation continuity
+let currentSessionId: string | null = null;
 
 async function sendChatMessage({
   messages,
@@ -31,43 +35,41 @@ async function sendChatMessage({
   onError,
 }: {
   messages: ChatMessage[];
-  onResponse: (text: string) => void;
+  onResponse: (text: string, sources?: string[]) => void;
   onError: (error: string) => void;
 }) {
   try {
     const lastMessage = messages[messages.length - 1];
     
-    const resp = await fetch(CHAT_PROXY_URL, {
+    const resp = await fetch(`${API_URL}/api/chat`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         message: lastMessage.content,
-        chatHistory: messages,
-        sessionId: `session_${Date.now()}`,
+        session_id: currentSessionId,
+        use_knowledge_base: true,
       }),
     });
 
     if (!resp.ok) {
       const errorText = await resp.text().catch(() => "Request failed");
-      console.error("n8n webhook error:", errorText);
+      console.error("Chat API error:", errorText);
       onError("Something went wrong. Please try again.");
       return;
     }
 
     const data = await resp.json();
-    console.log("n8n response:", data);
+    console.log("Chat API response:", data);
     
-    // Handle various response formats from n8n
-    const responseText = 
-      data.output || 
-      data.response || 
-      data.message || 
-      data.text ||
-      (typeof data === "string" ? data : JSON.stringify(data));
+    // Store session ID for conversation continuity
+    if (data.session_id) {
+      currentSessionId = data.session_id;
+    }
     
-    onResponse(responseText);
+    const responseText = data.response || "I apologize, I couldn't process your request.";
+    onResponse(responseText, data.sources);
   } catch (error) {
     console.error("Chat error:", error);
     onError("Connection error. Please try again.");
