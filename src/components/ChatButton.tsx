@@ -21,13 +21,20 @@ const INITIAL_MESSAGES: Message[] = [
   },
 ];
 
-// Knowledge Base API URL
-const API_URL = "https://8000-i9sqsgvlxjpy7al0ynwz7-d0b9e1e2.sandbox.novita.ai";
+// AI Agent API URL
+const API_URL = "https://8080-i9sqsgvlxjpy7al0ynwz7-d0b9e1e2.sandbox.novita.ai";
 
 type ChatMessage = { role: "user" | "assistant"; content: string };
 
-// Store session ID for conversation continuity
-let currentSessionId: string | null = null;
+// Get or create session ID from localStorage
+function getSessionId(): string {
+  let sessionId = localStorage.getItem('chat_session');
+  if (!sessionId) {
+    sessionId = `session_${Date.now()}`;
+    localStorage.setItem('chat_session', sessionId);
+  }
+  return sessionId;
+}
 
 async function sendChatMessage({
   messages,
@@ -35,11 +42,12 @@ async function sendChatMessage({
   onError,
 }: {
   messages: ChatMessage[];
-  onResponse: (text: string, sources?: string[]) => void;
+  onResponse: (text: string, metadata?: { needs_human?: boolean; intent?: string; priority?: string }) => void;
   onError: (error: string) => void;
 }) {
   try {
     const lastMessage = messages[messages.length - 1];
+    const sessionId = getSessionId();
     
     const resp = await fetch(`${API_URL}/api/chat`, {
       method: "POST",
@@ -48,8 +56,8 @@ async function sendChatMessage({
       },
       body: JSON.stringify({
         message: lastMessage.content,
-        session_id: currentSessionId,
-        use_knowledge_base: true,
+        session_id: sessionId,
+        source: "website",
       }),
     });
 
@@ -63,13 +71,12 @@ async function sendChatMessage({
     const data = await resp.json();
     console.log("Chat API response:", data);
     
-    // Store session ID for conversation continuity
-    if (data.session_id) {
-      currentSessionId = data.session_id;
-    }
-    
     const responseText = data.response || "I apologize, I couldn't process your request.";
-    onResponse(responseText, data.sources);
+    onResponse(responseText, {
+      needs_human: data.needs_human,
+      intent: data.intent,
+      priority: data.priority,
+    });
   } catch (error) {
     console.error("Chat error:", error);
     onError("Connection error. Please try again.");
