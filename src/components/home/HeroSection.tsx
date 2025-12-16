@@ -31,9 +31,9 @@ export function HeroSection() {
         <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/50" />
       </div>
 
-      {/* Decorative Glow */}
-      <div className="absolute top-1/3 left-0 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[150px] animate-glow" />
-      <div className="absolute bottom-0 right-1/4 w-[300px] h-[300px] bg-cyan/10 rounded-full blur-[100px]" />
+      {/* Decorative Glow - reduced blur for better performance */}
+      <div className="absolute top-1/3 left-0 w-[500px] h-[500px] bg-primary/15 rounded-full blur-[80px] opacity-50" />
+      <div className="absolute bottom-0 right-1/4 w-[300px] h-[300px] bg-cyan/10 rounded-full blur-[60px] opacity-40" />
 
       {/* Content */}
       <div className="relative container mx-auto px-4 py-20">
