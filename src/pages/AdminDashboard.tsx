@@ -34,26 +34,40 @@ interface DashboardStats {
 
 interface Conversation {
   id: string;
-  customer_name: string;
+  first_name: string;
+  last_name: string;
   last_message: string;
-  updated_at: string;
+  last_message_at: string;
   status: string;
+  source: string;
+  unread_count: number;
+  phone: string;
+  email: string;
 }
 
 interface TicketItem {
   id: string;
+  ticket_number: string;
   subject: string;
-  customer_name: string;
+  description: string;
+  first_name: string;
+  last_name: string;
   status: string;
   priority: string;
+  type: string;
   created_at: string;
+  phone: string;
+  email: string;
+  department_name: string;
 }
 
 interface Customer {
   id: string;
-  name: string;
+  first_name: string;
+  last_name: string;
   email: string;
   phone: string;
+  source: string;
   created_at: string;
 }
 
@@ -304,7 +318,7 @@ export default function AdminDashboard() {
                         {conversations.slice(0, 5).map((conv) => (
                           <div key={conv.id} className="p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors">
                             <div className="flex items-center justify-between mb-1">
-                              <span className="font-medium">{conv.customer_name || 'Unknown'}</span>
+                              <span className="font-medium">{`${conv.first_name || ''} ${conv.last_name || ''}`.trim() || 'Unknown'}</span>
                               <Badge variant="outline" className={getStatusColor(conv.status)}>
                                 {conv.status || 'active'}
                               </Badge>
@@ -312,7 +326,7 @@ export default function AdminDashboard() {
                             <p className="text-sm text-muted-foreground line-clamp-1">{conv.last_message || 'No messages'}</p>
                             <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
                               <Clock className="h-3 w-3" />
-                              {formatDate(conv.updated_at)}
+                              {formatDate(conv.last_message_at)}
                             </p>
                           </div>
                         ))}
@@ -347,7 +361,7 @@ export default function AdminDashboard() {
                                 {ticket.priority || 'normal'}
                               </Badge>
                             </div>
-                            <p className="text-sm text-muted-foreground">{ticket.customer_name || 'Unknown customer'}</p>
+                            <p className="text-sm text-muted-foreground">{`${ticket.first_name || ''} ${ticket.last_name || ''}`.trim() || 'Unknown customer'}</p>
                             <div className="flex items-center justify-between mt-1">
                               <Badge variant="outline" className={getStatusColor(ticket.status)}>
                                 {ticket.status || 'new'}
@@ -385,15 +399,23 @@ export default function AdminDashboard() {
                       {conversations.map((conv) => (
                         <div key={conv.id} className="p-4 rounded-lg bg-muted/50 hover:bg-muted transition-colors border border-border/30">
                           <div className="flex items-center justify-between mb-2">
-                            <span className="font-semibold text-lg">{conv.customer_name || 'Unknown'}</span>
-                            <Badge variant="outline" className={getStatusColor(conv.status)}>
-                              {conv.status || 'active'}
-                            </Badge>
+                            <div>
+                              <span className="font-semibold text-lg">{`${conv.first_name || ''} ${conv.last_name || ''}`.trim() || 'Unknown'}</span>
+                              {conv.phone && <p className="text-xs text-muted-foreground flex items-center gap-1"><Phone className="h-3 w-3" />{conv.phone}</p>}
+                            </div>
+                            <div className="flex items-center gap-2">
+                              {conv.unread_count > 0 && (
+                                <Badge className="bg-primary text-primary-foreground">{conv.unread_count} new</Badge>
+                              )}
+                              <Badge variant="outline" className={getStatusColor(conv.status)}>
+                                {conv.status || 'active'}
+                              </Badge>
+                            </div>
                           </div>
-                          <p className="text-muted-foreground">{conv.last_message || 'No messages'}</p>
+                          <p className="text-muted-foreground line-clamp-2">{conv.last_message || 'No messages'}</p>
                           <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
                             <Clock className="h-3 w-3" />
-                            {formatDate(conv.updated_at)}
+                            {formatDate(conv.last_message_at)}
                           </p>
                         </div>
                       ))}
@@ -422,7 +444,10 @@ export default function AdminDashboard() {
                       {tickets.map((ticket) => (
                         <div key={ticket.id} className="p-4 rounded-lg bg-muted/50 hover:bg-muted transition-colors border border-border/30">
                           <div className="flex items-center justify-between mb-2">
-                            <span className="font-semibold text-lg">{ticket.subject || 'No subject'}</span>
+                            <div>
+                              <p className="text-xs text-muted-foreground">{ticket.ticket_number}</p>
+                              <span className="font-semibold text-lg">{ticket.subject || 'No subject'}</span>
+                            </div>
                             <div className="flex gap-2">
                               <Badge variant="outline" className={getPriorityColor(ticket.priority)}>
                                 {ticket.priority || 'normal'}
@@ -432,11 +457,16 @@ export default function AdminDashboard() {
                               </Badge>
                             </div>
                           </div>
-                          <p className="text-muted-foreground">{ticket.customer_name || 'Unknown customer'}</p>
-                          <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
-                            <Clock className="h-3 w-3" />
-                            Created: {formatDate(ticket.created_at)}
-                          </p>
+                          <p className="text-muted-foreground mb-1">{`${ticket.first_name || ''} ${ticket.last_name || ''}`.trim() || 'Unknown customer'}</p>
+                          {ticket.phone && <p className="text-xs text-muted-foreground flex items-center gap-1"><Phone className="h-3 w-3" />{ticket.phone}</p>}
+                          <p className="text-sm text-muted-foreground mt-2 line-clamp-2">{ticket.description}</p>
+                          <div className="flex items-center justify-between mt-2">
+                            <Badge variant="secondary">{ticket.department_name || ticket.type}</Badge>
+                            <p className="text-xs text-muted-foreground flex items-center gap-1">
+                              <Clock className="h-3 w-3" />
+                              {formatDate(ticket.created_at)}
+                            </p>
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -466,11 +496,11 @@ export default function AdminDashboard() {
                           <div className="flex items-center gap-3 mb-3">
                             <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center">
                               <span className="text-primary font-semibold">
-                                {customer.name?.charAt(0)?.toUpperCase() || '?'}
+                                {customer.first_name?.charAt(0)?.toUpperCase() || '?'}
                               </span>
                             </div>
                             <div>
-                              <p className="font-semibold">{customer.name || 'Unknown'}</p>
+                              <p className="font-semibold">{`${customer.first_name || ''} ${customer.last_name || ''}`.trim() || 'Unknown'}</p>
                               <p className="text-xs text-muted-foreground">
                                 Customer since {formatDate(customer.created_at)}
                               </p>
@@ -490,6 +520,7 @@ export default function AdminDashboard() {
                               </p>
                             )}
                           </div>
+                          <Badge variant="secondary" className="mt-2">{customer.source}</Badge>
                         </div>
                       ))}
                     </div>
