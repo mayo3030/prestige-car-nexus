@@ -94,6 +94,15 @@
   h1, h2, h3, h4, h5, h6 {
     @apply font-display tracking-tight;
   }
+  
+  /* GPU acceleration for smooth animations */
+  .animate-fade-in,
+  .animate-fade-in-up,
+  .animate-scale-in,
+  .card-hover {
+    will-change: transform, opacity;
+    transform: translateZ(0);
+  }
 }
 
 @layer components {
