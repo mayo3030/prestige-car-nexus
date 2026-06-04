@@ -21,7 +21,7 @@ function CarCard({ car, view }: { car: Car; view: "grid" | "list" }) {
     return (
       <div className="glass-card rounded-xl overflow-hidden luxury-border transition-all duration-300 hover:border-champagne/30 flex">
         <div className="w-60 shrink-0 relative overflow-hidden">
-          <img src={car.image} alt={car.title} className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" onError={(e) => { (e.target as HTMLImageElement).src = "https://placehold.co/400x300/1a1a1a/cccccc?text=No+Image"; }} />
+          <img src={car.image} alt={car.title} data-ci-make={car.make} data-ci-model={car.model} data-ci-year={car.year} className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" onError={(e) => { (e.target as HTMLImageElement).src = "https://placehold.co/400x300/1a1a1a/cccccc?text=No+Image"; }} />
           {car.featured && (
             <Badge className="absolute top-3 left-3 bg-gradient-to-r from-champagne to-gold text-black border-0 text-xs">Featured</Badge>
           )}
@@ -65,7 +65,7 @@ function CarCard({ car, view }: { car: Car; view: "grid" | "list" }) {
   return (
     <div className="group glass-card rounded-2xl overflow-hidden luxury-border transition-all duration-300 hover:border-champagne/30 hover:shadow-lg hover:shadow-champagne/5">
       <div className="relative aspect-[4/3] overflow-hidden">
-        <img src={car.image} alt={car.title} className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110" onError={(e) => { (e.target as HTMLImageElement).src = "https://placehold.co/800x600/1a1a1a/cccccc?text=No+Image"; }} />
+        <img src={car.image} alt={car.title} data-ci-make={car.make} data-ci-model={car.model} data-ci-year={car.year} className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110" onError={(e) => { (e.target as HTMLImageElement).src = "https://placehold.co/800x600/1a1a1a/cccccc?text=No+Image"; }} />
         <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent" />
         
         {/* Hover overlay with quick specs */}

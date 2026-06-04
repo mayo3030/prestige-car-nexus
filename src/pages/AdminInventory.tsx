@@ -159,7 +159,7 @@ export default function AdminInventory() {
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
                         <div className="w-12 h-9 rounded-lg overflow-hidden shrink-0 bg-white/[0.05]">
-                          <img src={car.image} alt={car.title} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = ""; }} />
+                          <img src={car.image} alt={car.title} data-ci-make={car.make} data-ci-model={car.model} data-ci-year={car.year} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = ""; }} />
                         </div>
                         <div>
                           <Link to={`/vehicle/${car.id}`} className="text-sm font-medium hover:text-champagne transition-colors">

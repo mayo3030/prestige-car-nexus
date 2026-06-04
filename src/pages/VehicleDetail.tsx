@@ -85,6 +85,9 @@ const VehicleDetail = () => {
                   <img
                     src={allImages[currentImage]}
                     alt={vehicle.title}
+                    data-ci-make={vehicle.make}
+                    data-ci-model={vehicle.model}
+                    data-ci-year={vehicle.year}
                     className="w-full h-full object-cover"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = "https://placehold.co/800x500/1a1a1a/ffffff?text=No+Image";
@@ -127,6 +130,9 @@ const VehicleDetail = () => {
                       <img
                         src={img}
                         alt=""
+                        data-ci-make={vehicle.make}
+                        data-ci-model={vehicle.model}
+                        data-ci-year={vehicle.year}
                         className="w-full h-full object-cover"
                         onError={(e) => {
                           (e.target as HTMLImageElement).src = "https://placehold.co/160x100/1a1a1a/ffffff?text=N/A";

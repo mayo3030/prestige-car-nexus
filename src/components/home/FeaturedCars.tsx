@@ -21,6 +21,9 @@ function CarCard({ car, index }: { car: Car; index: number }) {
         <img
           src={car.image}
           alt={car.title}
+          data-ci-make={car.make}
+          data-ci-model={car.model}
+          data-ci-year={car.year}
           className="w-full h-full object-cover transition-all duration-700 ease-out group-hover:scale-110"
         />
         

@@ -67,7 +67,7 @@ export function HeroSection() {
   const models = selectedMake ? getModels(selectedMake) : [];
 
   return (
-    <section className="relative min-h-screen md:min-h-[90vh] flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
       {/* Hero background video */}
       <div className="absolute inset-0">
         <video
