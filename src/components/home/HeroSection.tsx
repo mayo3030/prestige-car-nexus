@@ -67,9 +67,22 @@ export function HeroSection() {
   const models = selectedMake ? getModels(selectedMake) : [];
 
   return (
-    <section className="relative min-h-screen md:min-h-[90vh] flex items-center justify-center overflow-hidden bg-gradient-to-b from-white via-red-50/30 to-gray-50">
-      {/* Light pattern overlay */}
-      <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle at 25% 25%, #000 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+    <section className="relative min-h-screen md:min-h-[90vh] flex items-center justify-center overflow-hidden">
+      {/* Hero background video */}
+      <div className="absolute inset-0">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-cover"
+          poster="/images/hero-bg.jpg"
+        >
+          <source src="/videos/hero-bg.mp4" type="video/mp4" />
+        </video>
+        {/* Dark overlay for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/30 to-black/65" />
+      </div>
       
       
       {/* Premium animated gradient overlay */}
