@@ -20,89 +20,37 @@ import {
   Check,
   FileText,
   Truck,
+  Fuel as FuelIcon,
+  Car,
 } from "lucide-react";
-
-const vehicleData = {
-  id: "1",
-  title: "Ferrari SF90 Stradale",
-  make: "Ferrari",
-  model: "SF90 Stradale",
-  year: 2023,
-  price: 825000,
-  mileage: 1200,
-  location: "Beverly Hills, CA",
-  vin: "WBAWL73589P123456",
-  exteriorColor: "Rosso Corsa",
-  interiorColor: "Nero Leather",
-  transmission: "8-Speed Dual-Clutch",
-  fuelType: "Hybrid",
-  engine: "4.0L Twin-Turbo V8 + 3 Electric Motors",
-  horsepower: "986 hp",
-  drivetrain: "All-Wheel Drive",
-  images: [
-    "https://images.unsplash.com/photo-1592198084033-aade902d1aae?q=80&w=2670",
-    "https://images.unsplash.com/photo-1583121274602-3e2820c69888?q=80&w=2670",
-    "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?q=80&w=2574",
-    "https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=2670",
-  ],
-  description: `This stunning Ferrari SF90 Stradale represents the pinnacle of Ferrari's engineering excellence. The first series-production PHEV (Plug-in Hybrid Electric Vehicle) from Maranello, it combines a turbocharged V8 with three electric motors to produce an astounding 986 horsepower.
-
-Finished in the iconic Rosso Corsa exterior with a beautifully appointed Nero leather interior, this example has been meticulously maintained with full service history at authorized Ferrari dealers.
-
-The SF90 Stradale features Ferrari's most advanced aerodynamics, including the innovative shut-off Gurney and active front vents, contributing to 390kg of downforce at 250 km/h. The interior showcases Ferrari's new HMI concept with a 16" curved HD screen and touch-sensitive steering wheel controls.`,
-  features: [
-    "Carbon Fiber Racing Seats",
-    "Full Carbon Fiber Interior Package",
-    "Assetto Fiorano Package",
-    "Front Lifting System",
-    "Racing Stripe in Nero",
-    "Yellow Brake Calipers",
-    "360° Parking Cameras",
-    "Premium JBL Audio System",
-    "Titanium Exhaust System",
-    "20\" Forged Wheels",
-  ],
-  historyReports: {
-    accidents: 0,
-    owners: 1,
-    serviceRecords: 8,
-    titleStatus: "Clean",
-  },
-  seller: {
-    name: "Prestige Motors Beverly Hills",
-    type: "Dealer",
-    rating: 4.9,
-    reviews: 234,
-    phone: "+1 (310) 555-0123",
-    email: "sales@prestigemotors.com",
-  },
-};
-
-const vehicles: Record<string, typeof vehicleData> = {
-  [vehicleData.id]: vehicleData,
-};
+import { getCarById, initCarStore } from "@/lib/carStore";
 
 const VehicleDetail = () => {
   const { id } = useParams<{ id: string }>();
   const [currentImage, setCurrentImage] = useState(0);
   const [isWishlisted, setIsWishlisted] = useState(false);
 
-  const vehicle = id ? (vehicles[id] ?? null) : null;
+  initCarStore();
+  const vehicle = id ? getCarById(id) : null;
+
+  const allImages = vehicle?.images?.length ? vehicle.images : vehicle?.image ? [vehicle.image] : [];
+  const hasMultipleImages = allImages.length > 1;
 
   const nextImage = () => {
-    if (!vehicle) return;
-    setCurrentImage((prev) => (prev + 1) % vehicle.images.length);
+    if (!hasMultipleImages) return;
+    setCurrentImage((prev) => (prev + 1) % allImages.length);
   };
 
   const prevImage = () => {
-    if (!vehicle) return;
-    setCurrentImage((prev) => (prev - 1 + vehicle.images.length) % vehicle.images.length);
+    if (!hasMultipleImages) return;
+    setCurrentImage((prev) => (prev - 1 + allImages.length) % allImages.length);
   };
 
   if (!vehicle) {
     return (
       <Layout>
         <div className="container mx-auto px-4 py-24 text-center">
+          <Car className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
           <h1 className="text-4xl font-display font-bold mb-4">Vehicle Not Found</h1>
           <p className="text-muted-foreground mb-8">
             The vehicle listing #{id} does not exist or is no longer available.
@@ -133,71 +81,94 @@ const VehicleDetail = () => {
             <div className="lg:col-span-2">
               {/* Image Gallery */}
               <div className="relative rounded-2xl overflow-hidden mb-4">
-                <div className="aspect-[16/10]">
+                <div className="aspect-[16/10] bg-black/40">
                   <img
-                    src={vehicle.images[currentImage]}
+                    src={allImages[currentImage]}
                     alt={vehicle.title}
                     className="w-full h-full object-cover"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = "https://placehold.co/800x500/1a1a1a/ffffff?text=No+Image";
+                    }}
                   />
                 </div>
-                <button
-                  onClick={prevImage}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-background/80 backdrop-blur-sm border border-border hover:bg-background transition-colors"
-                >
-                  <ChevronLeft className="h-5 w-5" />
-                </button>
-                <button
-                  onClick={nextImage}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-background/80 backdrop-blur-sm border border-border hover:bg-background transition-colors"
-                >
-                  <ChevronRight className="h-5 w-5" />
-                </button>
-                <div className="absolute top-4 left-4">
-                  <Badge className="bg-primary text-primary-foreground">Featured</Badge>
+                {hasMultipleImages && (
+                  <>
+                    <button
+                      onClick={prevImage}
+                      className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-background/80 backdrop-blur-sm border border-border hover:bg-background transition-colors"
+                    >
+                      <ChevronLeft className="h-5 w-5" />
+                    </button>
+                    <button
+                      onClick={nextImage}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-background/80 backdrop-blur-sm border border-border hover:bg-background transition-colors"
+                    >
+                      <ChevronRight className="h-5 w-5" />
+                    </button>
+                  </>
+                )}
+                <div className="absolute top-4 left-4 flex gap-2">
+                  {vehicle.featured && <Badge className="bg-gradient-to-r from-champagne to-gold text-black border-0">Featured</Badge>}
+                  {vehicle.auction && <Badge className="bg-red-500/90 text-white border-0">Live Auction</Badge>}
                 </div>
               </div>
 
               {/* Thumbnail Gallery */}
-              <div className="flex gap-2 mb-8 overflow-x-auto pb-2">
-                {vehicle.images.map((img, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setCurrentImage(idx)}
-                    className={`flex-shrink-0 w-24 h-16 rounded-lg overflow-hidden border-2 transition-colors ${
-                      currentImage === idx ? "border-primary" : "border-transparent hover:border-primary/50"
-                    }`}
-                  >
-                    <img src={img} alt="" className="w-full h-full object-cover" />
-                  </button>
-                ))}
-              </div>
+              {hasMultipleImages && (
+                <div className="flex gap-2 mb-8 overflow-x-auto pb-2">
+                  {allImages.map((img, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setCurrentImage(idx)}
+                      className={`flex-shrink-0 w-24 h-16 rounded-lg overflow-hidden border-2 transition-colors ${
+                        currentImage === idx ? "border-primary" : "border-transparent hover:border-primary/50"
+                      }`}
+                    >
+                      <img
+                        src={img}
+                        alt=""
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = "https://placehold.co/160x100/1a1a1a/ffffff?text=N/A";
+                        }}
+                      />
+                    </button>
+                  ))}
+                </div>
+              )}
 
               {/* Details Tabs */}
               <Tabs defaultValue="overview" className="w-full">
                 <TabsList className="w-full justify-start bg-card border border-border mb-6">
                   <TabsTrigger value="overview">Overview</TabsTrigger>
-                  <TabsTrigger value="features">Features</TabsTrigger>
-                  <TabsTrigger value="history">History Report</TabsTrigger>
+                  {vehicle.features?.length > 0 && <TabsTrigger value="features">Features</TabsTrigger>}
                 </TabsList>
 
                 <TabsContent value="overview" className="space-y-6">
-                  <div className="glass-card rounded-2xl p-6">
-                    <h2 className="text-xl font-semibold mb-4">Description</h2>
-                    <p className="text-muted-foreground whitespace-pre-line">
-                      {vehicle.description}
-                    </p>
-                  </div>
+                  {/* Description */}
+                  {vehicle.description && (
+                    <div className="glass-card rounded-2xl p-6">
+                      <h2 className="text-xl font-semibold mb-4">Description</h2>
+                      <p className="text-muted-foreground whitespace-pre-line">
+                        {vehicle.description}
+                      </p>
+                    </div>
+                  )}
 
+                  {/* Specifications */}
                   <div className="glass-card rounded-2xl p-6">
                     <h2 className="text-xl font-semibold mb-4">Specifications</h2>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                       {[
-                        { label: "Engine", value: vehicle.engine },
-                        { label: "Horsepower", value: vehicle.horsepower },
-                        { label: "Transmission", value: vehicle.transmission },
-                        { label: "Drivetrain", value: vehicle.drivetrain },
-                        { label: "Exterior Color", value: vehicle.exteriorColor },
-                        { label: "Interior Color", value: vehicle.interiorColor },
+                        ...(vehicle.engine ? [{ label: "Engine", value: vehicle.engine }] : []),
+                        ...(vehicle.horsepower ? [{ label: "Horsepower", value: vehicle.horsepower }] : []),
+                        ...(vehicle.transmission ? [{ label: "Transmission", value: vehicle.transmission }] : []),
+                        ...(vehicle.drivetrain ? [{ label: "Drivetrain", value: vehicle.drivetrain }] : []),
+                        ...(vehicle.exteriorColor ? [{ label: "Exterior Color", value: vehicle.exteriorColor }] : []),
+                        ...(vehicle.interiorColor ? [{ label: "Interior Color", value: vehicle.interiorColor }] : []),
+                        ...(vehicle.fuelType ? [{ label: "Fuel Type", value: vehicle.fuelType }] : []),
+                        ...(vehicle.bodyStyle ? [{ label: "Body Style", value: vehicle.bodyStyle }] : []),
+                        ...(vehicle.mpg ? [{ label: "MPG", value: vehicle.mpg }] : []),
                       ].map((spec) => (
                         <div key={spec.label} className="p-4 rounded-xl bg-secondary/50">
                           <div className="text-xs text-muted-foreground mb-1">{spec.label}</div>
@@ -208,51 +179,50 @@ const VehicleDetail = () => {
                   </div>
                 </TabsContent>
 
-                <TabsContent value="features">
-                  <div className="glass-card rounded-2xl p-6">
-                    <h2 className="text-xl font-semibold mb-4">Features & Options</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {vehicle.features.map((feature) => (
-                        <div key={feature} className="flex items-center gap-3">
-                          <Check className="h-5 w-5 text-primary flex-shrink-0" />
-                          <span>{feature}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </TabsContent>
-
-                <TabsContent value="history">
-                  <div className="glass-card rounded-2xl p-6">
-                    <div className="flex items-center gap-3 mb-6">
-                      <Shield className="h-6 w-6 text-primary" />
-                      <h2 className="text-xl font-semibold">Vehicle History Report</h2>
-                    </div>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                      <div className="p-4 rounded-xl bg-secondary/50 text-center">
-                        <div className="text-2xl font-bold text-primary">{vehicle.historyReports.accidents}</div>
-                        <div className="text-sm text-muted-foreground">Accidents</div>
-                      </div>
-                      <div className="p-4 rounded-xl bg-secondary/50 text-center">
-                        <div className="text-2xl font-bold text-primary">{vehicle.historyReports.owners}</div>
-                        <div className="text-sm text-muted-foreground">Previous Owners</div>
-                      </div>
-                      <div className="p-4 rounded-xl bg-secondary/50 text-center">
-                        <div className="text-2xl font-bold text-primary">{vehicle.historyReports.serviceRecords}</div>
-                        <div className="text-sm text-muted-foreground">Service Records</div>
-                      </div>
-                      <div className="p-4 rounded-xl bg-secondary/50 text-center">
-                        <div className="text-2xl font-bold text-green-500">{vehicle.historyReports.titleStatus}</div>
-                        <div className="text-sm text-muted-foreground">Title Status</div>
+                {vehicle.features?.length > 0 && (
+                  <TabsContent value="features">
+                    <div className="glass-card rounded-2xl p-6">
+                      <h2 className="text-xl font-semibold mb-4">Features & Options</h2>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {vehicle.features.map((feature) => (
+                          <div key={feature} className="flex items-center gap-3">
+                            <Check className="h-5 w-5 text-primary flex-shrink-0" />
+                            <span>{feature}</span>
+                          </div>
+                        ))}
                       </div>
                     </div>
-                    <Button variant="outline" className="w-full mt-6 gap-2">
-                      <FileText className="h-4 w-4" />
-                      View Full Report
-                    </Button>
-                  </div>
-                </TabsContent>
+                  </TabsContent>
+                )}
               </Tabs>
+
+              {/* VIN + History Info */}
+              <div className="glass-card rounded-2xl p-6 mt-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <Shield className="h-5 w-5 text-primary" />
+                  <h3 className="font-semibold">Vehicle Information</h3>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {vehicle.vin && (
+                    <div>
+                      <div className="text-xs text-muted-foreground mb-0.5">VIN</div>
+                      <div className="text-sm font-medium font-mono">{vehicle.vin}</div>
+                    </div>
+                  )}
+                  <div>
+                    <div className="text-xs text-muted-foreground mb-0.5">Year</div>
+                    <div className="text-sm font-medium">{vehicle.year}</div>
+                  </div>
+                  <div>
+                    <div className="text-xs text-muted-foreground mb-0.5">Mileage</div>
+                    <div className="text-sm font-medium">{vehicle.mileage.toLocaleString()} mi</div>
+                  </div>
+                  <div>
+                    <div className="text-xs text-muted-foreground mb-0.5">Location</div>
+                    <div className="text-sm font-medium">{vehicle.location}</div>
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Right Column - Pricing & Actions */}
@@ -326,23 +296,23 @@ const VehicleDetail = () => {
                       <Settings className="h-6 w-6 text-primary" />
                     </div>
                     <div>
-                      <div className="font-medium">{vehicle.seller.name}</div>
+                      <div className="font-medium">Jersey Auto Lease</div>
                       <div className="text-sm text-muted-foreground">
-                        {vehicle.seller.rating} ★ ({vehicle.seller.reviews} reviews)
+                        Newark, NJ
                       </div>
                     </div>
                   </div>
-                  <Badge variant="secondary" className="mb-4">Verified {vehicle.seller.type}</Badge>
+                  <Badge variant="secondary" className="mb-4">Verified Dealer</Badge>
                 </div>
 
                 {/* Shipping */}
                 <div className="glass-card rounded-2xl p-6">
                   <div className="flex items-center gap-3 mb-3">
                     <Truck className="h-5 w-5 text-primary" />
-                    <h3 className="font-semibold">Shipping Available</h3>
+                    <h3 className="font-semibold">Free Delivery</h3>
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    Enclosed transport available worldwide. Contact us for a custom quote.
+                    Free home delivery across New Jersey and surrounding states. Enclosed transport available nationwide on request.
                   </p>
                 </div>
               </div>
