@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>اختر لونك — Jersey Auto Lease</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #0a0a0a;
+  color: #f5f5f5;
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+  padding: 40px 20px;
+}
+
+.container {
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  background: linear-gradient(135deg, #f5f5f5 0%, #aaa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.header p {
+  color: #888;
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.theme-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 24px;
+}
+
+.theme-card {
+  background: #111;
+  border: 1px solid #222;
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  position: relative;
+}
+
+.theme-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--accent);
+  box-shadow: 0 20px 60px var(--glow);
+}
+
+.theme-card.selected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent), 0 20px 60px var(--glow);
+}
+
+.card-preview {
+  height: 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-preview::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 40%, var(--glow), transparent 70%);
+  opacity: 0.5;
+}
+
+.preview-badge {
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 0.65rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-weight: 600;
+  background: var(--accent);
+  color: #fff;
+  z-index: 1;
+}
+
+.preview-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  z-index: 1;
+  text-align: center;
+  line-height: 1.3;
+}
+
+.preview-btn {
+  padding: 6px 20px;
+  border-radius: 8px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  z-index: 1;
+}
+
+.card-body {
+  padding: 20px;
+}
+
+.card-body h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.color-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.color-swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid #333;
+  flex-shrink: 0;
+}
+
+.color-label {
+  font-size: 0.8rem;
+  color: #999;
+}
+
+.color-value {
+  font-size: 0.75rem;
+  color: #666;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  direction: ltr;
+}
+
+.card-desc {
+  font-size: 0.85rem;
+  color: #777;
+  margin-top: 10px;
+  line-height: 1.5;
+}
+
+/* ===== THEMES ===== */
+
+/* Theme 1: Red (Current) */
+.theme-red {
+  --accent: #d42f2f;
+  --glow: rgba(212, 47, 47, 0.3);
+}
+.theme-red .preview-badge,
+.theme-red .preview-btn { background: #d42f2f; }
+
+/* Theme 2: Champagne (Original) */
+.theme-champagne {
+  --accent: #c9a96e;
+  --glow: rgba(201, 169, 110, 0.3);
+}
+.theme-champagne .preview-badge,
+.theme-champagne .preview-btn { background: #c9a96e; }
+
+/* Theme 3: Deep Blue */
+.theme-blue {
+  --accent: #3668d4;
+  --glow: rgba(54, 104, 212, 0.3);
+}
+.theme-blue .preview-badge,
+.theme-blue .preview-btn { background: #3668d4; }
+
+/* Theme 4: Emerald Green */
+.theme-green {
+  --accent: #2a9d5f;
+  --glow: rgba(42, 157, 95, 0.3);
+}
+.theme-green .preview-badge,
+.theme-green .preview-btn { background: #2a9d5f; }
+
+/* Theme 5: Purple */
+.theme-purple {
+  --accent: #8b5cf6;
+  --glow: rgba(139, 92, 246, 0.3);
+}
+.theme-purple .preview-badge,
+.theme-purple .preview-btn { background: #8b5cf6; }
+
+/* ===== SELECT MARK ===== */
+.select-mark {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 2;
+}
+.theme-card.selected .select-mark {
+  opacity: 1;
+}
+
+/* ===== FOOTER ===== */
+.footer-actions {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.btn-apply {
+  display: inline-block;
+  padding: 16px 48px;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  border: none;
+  color: #fff;
+  background: linear-gradient(135deg, var(--btn-color, #666), #444);
+  cursor: pointer;
+  transition: all 0.3s;
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.btn-apply.active {
+  opacity: 1;
+  pointer-events: auto;
+  box-shadow: 0 8px 32px var(--btn-glow, transparent);
+}
+
+.btn-apply.active:hover {
+  transform: translateY(-3px);
+}
+
+.btn-apply:active {
+  transform: scale(0.97);
+}
+
+.theme-hint {
+  color: #555;
+  margin-top: 20px;
+  font-size: 0.85rem;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .header h1 { font-size: 1.8rem; }
+  .theme-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>اختار لون موقعك</h1>
+    <p>اختر الـ accent color اللي يعبر عن هويتك</p>
+  </div>
+
+  <div class="theme-grid">
+
+    <!-- 1. Red -->
+    <div class="theme-card theme-red" data-theme="red">
+      <div class="select-mark">✓</div>
+      <div class="card-preview">
+        <div class="preview-badge">Featured</div>
+        <div class="preview-title">Luxury Cars<br>at Premium Prices</div>
+        <div class="preview-btn">Browse Cars</div>
+      </div>
+      <div class="card-body">
+        <h3>أحمر</h3>
+        <div class="color-row">
+          <div class="color-swatch" style="background:#d42f2f"></div>
+          <div>
+            <div class="color-label">Red</div>
+            <div class="color-value">hsl(0, 75%, 52%)</div>
+          </div>
+        </div>
+        <p class="card-desc">جريء، سباقي، يجذب الانتباه. مثالي للسيارات الرياضية الفارهة.</p>
+      </div>
+    </div>
+
+    <!-- 2. Champagne -->
+    <div class="theme-card theme-champagne" data-theme="champagne">
+      <div class="select-mark">✓</div>
+      <div class="card-preview">
+        <div class="preview-badge">Featured</div>
+        <div class="preview-title">Luxury Cars<br>at Premium Prices</div>
+        <div class="preview-btn">Browse Cars</div>
+      </div>
+      <div class="card-body">
+        <h3>شامبانيا</h3>
+        <div class="color-row">
+          <div class="color-swatch" style="background:#c9a96e"></div>
+          <div>
+            <div class="color-label">Champagne Gold</div>
+            <div class="color-value">hsl(35, 55%, 65%)</div>
+          </div>
+        </div>
+        <p class="card-desc">كلاسيكي فخم، هادئ، راقي. يناسب luxury lifestyle والثقة.</p>
+      </div>
+    </div>
+
+    <!-- 3. Blue -->
+    <div class="theme-card theme-blue" data-theme="blue">
+      <div class="select-mark">✓</div>
+      <div class="card-preview">
+        <div class="preview-badge">Featured</div>
+        <div class="preview-title">Luxury Cars<br>at Premium Prices</div>
+        <div class="preview-btn">Browse Cars</div>
+      </div>
+      <div class="card-body">
+        <h3>أزرق</h3>
+        <div class="color-row">
+          <div class="color-swatch" style="background:#3668d4"></div>
+          <div>
+            <div class="color-label">Deep Blue</div>
+            <div class="color-value">hsl(215, 70%, 50%)</div>
+          </div>
+        </div>
+        <p class="card-desc">ثقة، احترافية، هدوء. مثالي للـ trust والـ corporate luxury.</p>
+      </div>
+    </div>
+
+    <!-- 4. Emerald -->
+    <div class="theme-card theme-green" data-theme="green">
+      <div class="select-mark">✓</div>
+      <div class="card-preview">
+        <div class="preview-badge">Featured</div>
+        <div class="preview-title">Luxury Cars<br>at Premium Prices</div>
+        <div class="preview-btn">Browse Cars</div>
+      </div>
+      <div class="card-body">
+        <h3>زمردي</h3>
+        <div class="color-row">
+          <div class="color-swatch" style="background:#2a9d5f"></div>
+          <div>
+            <div class="color-label">Emerald Green</div>
+            <div class="color-value">hsl(160, 60%, 45%)</div>
+          </div>
+        </div>
+        <p class="card-desc">ثري، طبيعي، فريد. يبرز الفخامة البيئية والـ sophistication.</p>
+      </div>
+    </div>
+
+    <!-- 5. Purple -->
+    <div class="theme-card theme-purple" data-theme="purple">
+      <div class="select-mark">✓</div>
+      <div class="card-preview">
+        <div class="preview-badge">Featured</div>
+        <div class="preview-title">Luxury Cars<br>at Premium Prices</div>
+        <div class="preview-btn">Browse Cars</div>
+      </div>
+      <div class="card-body">
+        <h3>بنفسجي</h3>
+        <div class="color-row">
+          <div class="color-swatch" style="background:#8b5cf6"></div>
+          <div>
+            <div class="color-label">Royal Purple</div>
+            <div class="color-value">hsl(270, 60%, 55%)</div>
+          </div>
+        </div>
+        <p class="card-desc">ملكي، إبداعي، مميز. لجرأة غير تقليدية في عالم السيارات.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer-actions">
+    <button class="btn-apply" id="applyBtn">↵ طبّق اللون على الموقع</button>
+    <p class="theme-hint">اختار لون عشان تفعّل الزر</p>
+  </div>
+</div>
+
+<script>
+let selectedTheme = null;
+
+document.querySelectorAll('.theme-card').forEach(card => {
+  card.addEventListener('click', () => {
+    document.querySelectorAll('.theme-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    selectedTheme = card.dataset.theme;
+    const btn = document.getElementById('applyBtn');
+    btn.classList.add('active');
+    const colors = {
+      red:    { bg: '#d42f2f', glow: 'rgba(212, 47, 47, 0.3)' },
+      champagne: { bg: '#c9a96e', glow: 'rgba(201, 169, 110, 0.3)' },
+      blue:   { bg: '#3668d4', glow: 'rgba(54, 104, 212, 0.3)' },
+      green:  { bg: '#2a9d5f', glow: 'rgba(42, 157, 95, 0.3)' },
+      purple: { bg: '#8b5cf6', glow: 'rgba(139, 92, 246, 0.3)' },
+    };
+    const c = colors[selectedTheme];
+    btn.style.setProperty('--btn-color', c.bg);
+    btn.style.setProperty('--btn-glow', c.glow);
+  });
+});
+
+document.getElementById('applyBtn').addEventListener('click', async () => {
+  if (!selectedTheme) return;
+  const btn = document.getElementById('applyBtn');
+  btn.textContent = '⏳ جارٍ التطبيق...';
+  btn.disabled = true;
+
+  try {
+    // maps: theme name → CSS variable values
+    const themeMap = {
+      red: {
+        primary: '0 75% 52%',
+        champagne: '0 75% 52%',
+        champagneLight: '0 75% 65%',
+        champagneDark: '0 70% 40%',
+        gold: '355 70% 45%',
+        goldGlow: '0 75% 55%',
+        roseGold: '350 50% 55%',
+        label: 'أحمر 🔴'
+      },
+      champagne: {
+        primary: '35 55% 65%',
+        champagne: '35 55% 65%',
+        champagneLight: '35 55% 78%',
+        champagneDark: '35 45% 50%',
+        gold: '40 60% 55%',
+        goldGlow: '40 60% 60%',
+        roseGold: '350 30% 60%',
+        label: 'شامبانيا ✨'
+      },
+      blue: {
+        primary: '215 70% 50%',
+        champagne: '215 70% 52%',
+        champagneLight: '215 70% 65%',
+        champagneDark: '215 65% 40%',
+        gold: '220 65% 45%',
+        goldGlow: '215 70% 55%',
+        roseGold: '340 30% 55%',
+        label: 'أزرق 🔵'
+      },
+      green: {
+        primary: '160 60% 45%',
+        champagne: '160 60% 48%',
+        champagneLight: '160 60% 62%',
+        champagneDark: '160 55% 37%',
+        gold: '150 55% 40%',
+        goldGlow: '160 60% 50%',
+        roseGold: '340 25% 55%',
+        label: 'زمردي 🟢'
+      },
+      purple: {
+        primary: '270 60% 55%',
+        champagne: '270 60% 55%',
+        champagneLight: '270 60% 68%',
+        champagneDark: '270 55% 42%',
+        gold: '260 55% 45%',
+        goldGlow: '270 60% 58%',
+        roseGold: '330 35% 55%',
+        label: 'بنفسجي 🟣'
+      }
+    };
+
+    const t = themeMap[selectedTheme];
+
+    const resp = await fetch('/api/apply-theme', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        primary: t.primary,
+        champagne: t.champagne,
+        champagneLight: t.champagneLight,
+        champagneDark: t.champagneDark,
+        gold: t.gold,
+        goldGlow: t.goldGlow,
+        roseGold: t.roseGold,
+        label: t.label
+      })
+    });
+
+    if (!resp.ok) throw new Error('فشل التطبيق');
+    const result = await resp.json();
+
+    btn.textContent = `✅ ${t.label} — تم التطبيق!`;
+    btn.disabled = false;
+
+    // refresh the main site
+    setTimeout(() => {
+      window.open('https://jersey.minateckhub.com', '_blank');
+    }, 1500);
+
+  } catch(e) {
+    btn.textContent = '❌ فشل التطبيق — جرب كمان مرة';
+    btn.disabled = false;
+  }
+});
+
+</script>
+</body>
+</html>
