@@ -24,87 +24,133 @@ export interface Car {
   vin?: string;
 }
 
-const STORAGE_KEY = "jersey-cars";
-const INIT_KEY = "jersey-cars-initialized";
+const STORAGE_KEY = "jersey-cars-v2";
+const INIT_KEY = "jersey-cars-v2-initialized";
 
 const defaultCars: Car[] = [
+  // === HONDA 2026 ===
   {
-    id: "1", title: "2027 Porsche 911 Carrera S", make: "Porsche", model: "911 Carrera S",
-    year: 2027, price: 168000, mileage: 340, location: "New Jersey",
-    image: "https://images.unsplash.com/photo-1628519592419-bf288f08cef5?q=80&w=2670",
-    featured: true,
+    id: "h1", title: "2026 Honda Accord", make: "Honda", model: "Accord",
+    year: 2026, price: 32950, mileage: 15, location: "Newark, NJ",
+    image: "https://images.unsplash.com/photo-1619767886558-efdc7b9af94d?q=80&w=2670",
+    featured: true, transmission: "Automatic", fuelType: "Hybrid",
+    exteriorColor: "Crystal Black Pearl", interiorColor: "Black",
+    engine: "2.0L I4 Hybrid", horsepower: "247 hp", drivetrain: "FWD",
   },
   {
-    id: "2", title: "2027 BMW M3 Competition xDrive", make: "BMW", model: "M3 Competition",
-    year: 2027, price: 92000, mileage: 510, location: "New York, NY",
-    image: "https://images.unsplash.com/photo-1625231334168-35067f8853ed?q=80&w=2670",
-    featured: true,
+    id: "h2", title: "2026 Honda Civic", make: "Honda", model: "Civic",
+    year: 2026, price: 26950, mileage: 22, location: "Jersey City, NJ",
+    image: "https://images.unsplash.com/photo-1611564494260-6f21b1af1e4f?q=80&w=2670",
+    featured: true, transmission: "CVT", fuelType: "Gasoline",
+    exteriorColor: "Sonic Gray Pearl", interiorColor: "Charcoal",
   },
   {
-    id: "3", title: "2027 Mercedes-AMG GT 63", make: "Mercedes-AMG", model: "GT 63",
-    year: 2027, price: 198000, mileage: 220, location: "Miami, FL",
-    image: "https://images.unsplash.com/photo-1580273916550-e323be2ae537?q=80&w=2670",
+    id: "h3", title: "2026 Honda CR-V", make: "Honda", model: "CR-V",
+    year: 2026, price: 35950, mileage: 10, location: "Paramus, NJ",
+    image: "https://images.unsplash.com/photo-1633623708492-2c8633cf95da?q=80&w=2670",
+    featured: true, transmission: "Automatic", fuelType: "Hybrid",
+    exteriorColor: "Platinum White Pearl", interiorColor: "Gray",
   },
   {
-    id: "4", title: "2027 McLaren 750S", make: "McLaren", model: "750S",
-    year: 2027, price: 365000, mileage: 180, location: "Beverly Hills, CA",
-    image: "https://images.unsplash.com/photo-1516298252535-cf2ac5147f9b?q=80&w=2670",
-    featured: true,
+    id: "h4", title: "2026 Honda Pilot", make: "Honda", model: "Pilot",
+    year: 2026, price: 42950, mileage: 18, location: "Edison, NJ",
+    image: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=2670",
+    transmission: "Automatic", fuelType: "Gasoline",
+    exteriorColor: "Modern Steel Metallic", interiorColor: "Black",
   },
   {
-    id: "5", title: "2027 Ford Mustang Shelby GT500", make: "Ford", model: "Mustang Shelby GT500",
-    year: 2027, price: 89500, mileage: 690, location: "Dallas, TX",
-    image: "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?q=80&w=2670",
-    goodRate: true,
+    id: "h5", title: "2026 Honda Passport", make: "Honda", model: "Passport",
+    year: 2026, price: 39950, mileage: 12, location: "Freehold, NJ",
+    image: "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?q=80&w=2670",
+    transmission: "Automatic", fuelType: "Gasoline",
+  },
+
+  // === MAZDA 2026 ===
+  {
+    id: "m1", title: "2026 Mazda CX-5", make: "Mazda", model: "CX-5",
+    year: 2026, price: 33450, mileage: 8, location: "Wayne, NJ",
+    image: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=2670",
+    featured: true, transmission: "Automatic", fuelType: "Gasoline",
+    exteriorColor: "Soul Red Crystal", interiorColor: "Brown",
   },
   {
-    id: "6", title: "2027 Audi RS7 Sportback", make: "Audi", model: "RS7 Sportback",
-    year: 2027, price: 135000, mileage: 410, location: "Chicago, IL",
-    image: "https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?q=80&w=2670",
+    id: "m2", title: "2026 Mazda CX-50", make: "Mazda", model: "CX-50",
+    year: 2026, price: 34950, mileage: 14, location: "Morristown, NJ",
+    image: "https://images.unsplash.com/photo-1590362891991-f776e747a588?q=80&w=2670",
+    featured: true, transmission: "Automatic", fuelType: "Gasoline",
+    exteriorColor: "Polymetal Gray", interiorColor: "Black",
   },
   {
-    id: "7", title: "Ferrari SF90 Stradale", make: "Ferrari", model: "SF90 Stradale",
-    year: 2023, price: 825000, mileage: 1200, location: "Beverly Hills, CA",
-    image: "https://images.unsplash.com/photo-1592198084033-aade902d1aae?q=80&w=2670",
-    featured: true,
+    id: "m3", title: "2026 Mazda CX-90", make: "Mazda", model: "CX-90",
+    year: 2026, price: 42950, mileage: 20, location: "Princeton, NJ",
+    image: "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?q=80&w=2670",
+    featured: true, transmission: "Automatic", fuelType: "Gasoline",
+    exteriorColor: "Artisan Red", interiorColor: "Tan",
   },
   {
-    id: "8", title: "Lamborghini Huracán EVO", make: "Lamborghini", model: "Huracán EVO",
-    year: 2022, price: 389000, mileage: 3500, location: "Miami, FL",
-    image: "https://images.unsplash.com/photo-1511919886926-f2d2d0675f64?q=80&w=2670",
+    id: "m4", title: "2026 Mazda3", make: "Mazda", model: "Mazda3",
+    year: 2026, price: 25450, mileage: 25, location: "Bridgewater, NJ",
+    image: "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?q=80&w=2670",
+    transmission: "Automatic", fuelType: "Gasoline",
+    exteriorColor: "Machine Gray Metallic", interiorColor: "Black",
   },
   {
-    id: "9", title: "Porsche 911 GT3 RS", make: "Porsche", model: "911 GT3 RS",
-    year: 2024, price: 295000, mileage: 850, location: "New York, NY",
-    image: "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?q=80&w=2670",
-    auction: true,
+    id: "m5", title: "2026 Mazda MX-5 Miata", make: "Mazda", model: "MX-5 Miata",
+    year: 2026, price: 33950, mileage: 5, location: "Red Bank, NJ",
+    image: "https://images.unsplash.com/photo-1551830820-330a71b99659?q=80&w=2670",
+    transmission: "Manual", fuelType: "Gasoline",
+    exteriorColor: "Soul Red Crystal", interiorColor: "Black",
+  },
+
+  // === TOYOTA 2026 ===
+  {
+    id: "t1", title: "2026 Toyota Camry", make: "Toyota", model: "Camry",
+    year: 2026, price: 30950, mileage: 12, location: "Newark, NJ",
+    image: "https://images.unsplash.com/photo-1621007947382-bb3c39934e3f?q=80&w=2670",
+    featured: true, transmission: "Automatic", fuelType: "Hybrid",
+    exteriorColor: "Midnight Black Metallic", interiorColor: "Black",
   },
   {
-    id: "10", title: "Rolls-Royce Phantom", make: "Rolls-Royce", model: "Phantom",
-    year: 2023, price: 475000, mileage: 2100, location: "Las Vegas, NV",
-    image: "https://images.unsplash.com/photo-1631295868223-63265b40d9e4?q=80&w=2670",
+    id: "t2", title: "2026 Toyota RAV4", make: "Toyota", model: "RAV4",
+    year: 2026, price: 33450, mileage: 10, location: "Elizabeth, NJ",
+    image: "https://images.unsplash.com/photo-1629897045550-3dd0bbd8a136?q=80&w=2670",
+    featured: true, transmission: "Automatic", fuelType: "Hybrid",
+    exteriorColor: "Magnetic Gray Metallic", interiorColor: "Gray",
   },
   {
-    id: "11", title: "McLaren 720S Spider", make: "McLaren", model: "720S Spider",
-    year: 2022, price: 345000, mileage: 4200, location: "Scottsdale, AZ",
-    image: "https://images.unsplash.com/photo-1614200187524-dc4b892acf16?q=80&w=2670",
+    id: "t3", title: "2026 Toyota Corolla", make: "Toyota", model: "Corolla",
+    year: 2026, price: 24950, mileage: 18, location: "Paterson, NJ",
+    image: "https://images.unsplash.com/photo-1623869675781-80aa31012a5a?q=80&w=2670",
+    featured: true, transmission: "CVT", fuelType: "Gasoline",
+    exteriorColor: "Celestite Gray", interiorColor: "Black",
   },
   {
-    id: "12", title: "Bentley Continental GT", make: "Bentley", model: "Continental GT",
-    year: 2023, price: 265000, mileage: 1800, location: "Chicago, IL",
-    image: "https://images.unsplash.com/photo-1583032015879-e5022cb87c3b?q=80&w=2670",
-    featured: true,
+    id: "t4", title: "2026 Toyota 4Runner", make: "Toyota", model: "4Runner",
+    year: 2026, price: 44950, mileage: 8, location: "Trenton, NJ",
+    image: "https://images.unsplash.com/photo-1520031441870-7b0bb0b2f0ac?q=80&w=2670",
+    transmission: "Automatic", fuelType: "Gasoline",
+    exteriorColor: "Super White", interiorColor: "Black",
   },
   {
-    id: "13", title: "Aston Martin DBS Superleggera", make: "Aston Martin", model: "DBS Superleggera",
-    year: 2022, price: 335000, mileage: 2800, location: "San Francisco, CA",
-    image: "https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?q=80&w=2670",
+    id: "t5", title: "2026 Toyota Tacoma", make: "Toyota", model: "Tacoma",
+    year: 2026, price: 38950, mileage: 15, location: "Cherry Hill, NJ",
+    image: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=2670",
+    transmission: "Automatic", fuelType: "Gasoline",
+    exteriorColor: "Army Green", interiorColor: "Black",
   },
   {
-    id: "14", title: "Bugatti Chiron Sport", make: "Bugatti", model: "Chiron Sport",
-    year: 2021, price: 3250000, mileage: 500, location: "Monaco",
-    image: "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?q=80&w=2574",
-    featured: true,
+    id: "t6", title: "2026 Toyota Grand Highlander", make: "Toyota", model: "Grand Highlander",
+    year: 2026, price: 45950, mileage: 22, location: "Woodbridge, NJ",
+    image: "https://images.unsplash.com/photo-1606016159991-dfe4f27469ad?q=80&w=2670",
+    transmission: "Automatic", fuelType: "Hybrid",
+    exteriorColor: "Blueprint", interiorColor: "Tan",
+  },
+  {
+    id: "t7", title: "2026 Toyota Land Cruiser", make: "Toyota", model: "Land Cruiser",
+    year: 2026, price: 61950, mileage: 30, location: "Princeton, NJ",
+    image: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=2670",
+    transmission: "Automatic", fuelType: "Hybrid",
+    exteriorColor: "Heritage Blue", interiorColor: "Black",
   },
 ];
 
@@ -113,10 +159,9 @@ function generateId(): string {
 }
 
 export function initCarStore(): void {
-  if (!localStorage.getItem(INIT_KEY)) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultCars));
-    localStorage.setItem(INIT_KEY, "true");
-  }
+  // Always reset with new defaults
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultCars));
+  localStorage.setItem(INIT_KEY, "true");
 }
 
 export function getCars(): Car[] {
@@ -142,7 +187,7 @@ export function addCar(car: Omit<Car, "id">): Car {
 
 export function updateCar(id: string, updates: Partial<Car>): Car | null {
   const cars = getCars();
-  const idx = cars.findIndex((c) => c.id === id);
+  const idx = cars.findIndex((c) => c.id === idx);
   if (idx === -1) return null;
   cars[idx] = { ...cars[idx], ...updates };
   localStorage.setItem(STORAGE_KEY, JSON.stringify(cars));

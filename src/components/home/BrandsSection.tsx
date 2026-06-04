@@ -1,14 +1,7 @@
 const brands = [
-  { name: "Toyota", logo: "🚗" },
-  { name: "Honda", logo: "🏎️" },
-  { name: "Hyundai", logo: "🚙" },
-  { name: "BMW", logo: "🔵" },
-  { name: "Nissan", logo: "⭕" },
-  { name: "Ford", logo: "🔷" },
-  { name: "Chevrolet", logo: "➕" },
-  { name: "Kia", logo: "🔶" },
+  { name: "Honda", logo: "🔴" },
   { name: "Mazda", logo: "Ⓜ️" },
-  { name: "Mercedes", logo: "⭐" },
+  { name: "Toyota", logo: "🔵" },
 ];
 
 export function BrandsSection() {
