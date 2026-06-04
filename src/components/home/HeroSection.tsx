@@ -81,12 +81,12 @@ export function HeroSection() {
           <source src="/videos/hero-bg.mp4" type="video/mp4" />
         </video>
         {/* Dark overlay for text readability */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/30 to-black/65" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-black/15 to-black/35" />
       </div>
       
       
       {/* Premium animated gradient overlay */}
-      <div className="absolute inset-0 gradient-hero opacity-60" />
+      <div className="absolute inset-0 gradient-hero opacity-30" />
 
       {/* Floating light orbs */}
       <div className="absolute inset-0 overflow-hidden">

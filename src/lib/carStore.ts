@@ -173,9 +173,9 @@ const defaultCars: Car[] = [
   {
     id: "m1", title: "2026 Mazda CX-5", make: "Mazda", model: "CX-5",
     year: 2026, price: 33450, mileage: 8, location: "Wayne, NJ",
-    image: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=2670",
+    image: "https://images.unsplash.com/photo-1550355291-b6e7c0a5e4f9?q=80&w=2670",
     images: [
-      "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=2670",
+      "https://images.unsplash.com/photo-1550355291-b6e7c0a5e4f9?q=80&w=2670",
       "https://images.unsplash.com/photo-1590362891991-f776e747a588?q=80&w=2670",
     ],
     featured: true,
