@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { getMakes, getModels } from "@/lib/vehicleData";
+import heroLogo from "@/assets/jersey-auto-lease-logo.png";
 
 const priceRanges = [
   { label: "Under $15K", value: "0-15000" },
@@ -80,7 +81,9 @@ export function HeroSection() {
           <source src="/videos/hero-bg.mp4" type="video/mp4" />
         </video>
         {/* Dark overlay for text readability */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-black/60" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/30 to-black/65" />
+        {/* Center brightness boost for watermark visibility */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,0.06)_0%,_transparent_60%)]" />
       </div>
       
       {/* Premium animated gradient overlay */}
@@ -113,6 +116,22 @@ export function HeroSection() {
             }}
           />
         ))}
+      </div>
+
+      {/* Large logo watermark - highest background layer */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[2]">
+        <div className="relative">
+          {/* Bright center spot to make the watermark visible */}
+          <div className="absolute inset-0 scale-[1.2] bg-white/[0.02] blur-[120px] rounded-full" />
+          {/* Warm glow behind logo */}
+          <div className="absolute inset-0 scale-[1.8] bg-white/10 blur-[100px] rounded-full" />
+          <img 
+            src={heroLogo} 
+            alt="" 
+            className="h-72 md:h-96 lg:h-[40rem] w-auto opacity-[0.35] md:opacity-[0.25] brightness-[2.5] contrast-[1.3] relative"
+            style={{ filter: "drop-shadow(0 0 80px rgba(255,200,100,0.15)) drop-shadow(0 0 40px rgba(255,255,255,0.1))" }}
+          />
+        </div>
       </div>
 
       {/* Content */}
