@@ -122,7 +122,12 @@ export function HeroSection() {
         <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
           {/* Left Content */}
           <div className="max-w-xl">
-            <div className="flex items-center gap-2 mb-3 md:mb-4 animate-fade-in-up">
+            <div className="flex items-center gap-3 mb-4 md:mb-5 animate-fade-in-up">
+              <img 
+                src={heroLogo} 
+                alt="Jersey Auto Lease" 
+                className="h-10 md:h-12 w-auto opacity-90"
+              />
               <Sparkles className="h-3 w-3 md:h-4 md:w-4 text-champagne" />
               <span className="text-champagne text-[10px] md:text-sm uppercase tracking-[0.15em] md:tracking-[0.2em] font-medium">
                 Premium Auto Marketplace
