@@ -1,83 +1,60 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
+function corsHeaders(req: Request) {
+  const origin = req.headers.get("origin") ?? "";
+  const allowedOrigin = Deno.env.get("ALLOWED_ORIGIN") ?? "*";
+  return {
+    "Access-Control-Allow-Origin": allowedOrigin === "*" ? "*" : origin === allowedOrigin ? origin : allowedOrigin,
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+  };
+}
 
-const N8N_WEBHOOK_URL = "https://mayomina2020.app.n8n.cloud/webhook/auction-chatbot";
+function jsonResponse(req: Request, body: Record<string, unknown>, status = 200) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { ...corsHeaders(req), "Content-Type": "application/json" },
+  });
+}
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: corsHeaders(req) });
+  }
+
+  if (req.method !== "POST") {
+    return jsonResponse(req, { error: "Method not allowed" }, 405);
+  }
+
+  const webhookUrl = Deno.env.get("N8N_WEBHOOK_URL");
+  if (!webhookUrl) {
+    return jsonResponse(req, { error: "N8N_WEBHOOK_URL is not configured" }, 500);
   }
 
   try {
     const body = await req.json();
-    console.log("📤 Sending to n8n:", JSON.stringify(body, null, 2));
-
-    const response = await fetch(N8N_WEBHOOK_URL, {
+    const response = await fetch(webhookUrl, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
 
-    console.log("📥 n8n response status:", response.status);
-
-    // Get the raw response text first
     const responseText = await response.text();
-    console.log("📥 n8n raw response:", responseText);
-
-    // Handle empty response
-    if (!responseText || responseText.trim() === "") {
-      console.log("⚠️ n8n returned empty response - using fallback");
-      return new Response(
-        JSON.stringify({ 
-          response: "شكراً لتواصلك معنا! سيتم الرد عليك قريباً من فريق المبيعات." 
-        }),
-        {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
-      );
-    }
-
-    // Try to parse as JSON
-    let data;
-    try {
-      data = JSON.parse(responseText);
-      console.log("✅ Parsed n8n response:", JSON.stringify(data, null, 2));
-    } catch (parseError) {
-      console.log("⚠️ n8n response is not JSON, treating as text");
-      data = { response: responseText };
+    let data: Record<string, unknown> = { response: "Workflow accepted." };
+    if (responseText) {
+      try {
+        data = JSON.parse(responseText);
+      } catch {
+        data = { response: responseText };
+      }
     }
 
     if (!response.ok) {
-      console.error("❌ n8n error:", response.status, data);
-      return new Response(
-        JSON.stringify({ error: "n8n webhook error", details: data }),
-        {
-          status: response.status,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
-      );
+      return jsonResponse(req, { error: "Workflow error", details: data }, response.status);
     }
 
-    return new Response(JSON.stringify(data), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
-  } catch (error) {
-    console.error("❌ Proxy error:", error);
-    return new Response(
-      JSON.stringify({ 
-        error: error instanceof Error ? error.message : "Unknown error",
-        response: "عذراً، حدث خطأ. يرجى المحاولة مرة أخرى." 
-      }),
-      {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      }
-    );
+    return jsonResponse(req, data);
+  } catch {
+    return jsonResponse(req, { error: "Unable to complete workflow request." }, 500);
   }
 });

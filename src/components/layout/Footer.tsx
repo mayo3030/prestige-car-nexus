@@ -8,7 +8,7 @@ const footerLinks = {
     { label: "Sedans", href: "/inventory?type=sedan" },
     { label: "SUVs & Crossovers", href: "/inventory?type=suv" },
     { label: "Trucks", href: "/inventory?type=truck" },
-    { label: "Specials", href: "/inventory?type=specials" },
+    { label: "Specials", href: "/specials" },
   ],
   services: [
     { label: "Sell Your Car", href: "/sell" },
@@ -136,30 +136,30 @@ export function Footer() {
             </div>
             <div className="flex items-center gap-4">
               <a
-                href="#"
+                href="/contact"
                 className="p-2 text-muted-foreground hover:text-primary transition-colors"
-                aria-label="Facebook"
+                aria-label="Ask about Facebook updates"
               >
                 <Facebook className="h-5 w-5" />
               </a>
               <a
-                href="#"
+                href="/contact"
                 className="p-2 text-muted-foreground hover:text-primary transition-colors"
-                aria-label="Instagram"
+                aria-label="Ask about Instagram updates"
               >
                 <Instagram className="h-5 w-5" />
               </a>
               <a
-                href="#"
+                href="/contact"
                 className="p-2 text-muted-foreground hover:text-primary transition-colors"
-                aria-label="Twitter"
+                aria-label="Ask about Twitter updates"
               >
                 <Twitter className="h-5 w-5" />
               </a>
               <a
-                href="#"
+                href="/contact"
                 className="p-2 text-muted-foreground hover:text-primary transition-colors"
-                aria-label="YouTube"
+                aria-label="Ask about YouTube updates"
               >
                 <Youtube className="h-5 w-5" />
               </a>

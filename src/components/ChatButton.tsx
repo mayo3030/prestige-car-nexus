@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/components/ui/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Message {
   id: number;
@@ -20,9 +21,6 @@ const INITIAL_MESSAGES: Message[] = [
     timestamp: new Date(),
   },
 ];
-
-// AI Agent API URL
-const API_URL = "https://8080-i9sqsgvlxjpy7al0ynwz7-d0b9e1e2.sandbox.novita.ai";
 
 type ChatMessage = { role: "user" | "assistant"; content: string };
 
@@ -49,36 +47,26 @@ async function sendChatMessage({
     const lastMessage = messages[messages.length - 1];
     const sessionId = getSessionId();
     
-    const resp = await fetch(`${API_URL}/api/chat`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+    const { data, error } = await supabase.functions.invoke("chat", {
+      body: {
         message: lastMessage.content,
+        messages,
         session_id: sessionId,
         source: "website",
-      }),
+      },
     });
 
-    if (!resp.ok) {
-      const errorText = await resp.text().catch(() => "Request failed");
-      console.error("Chat API error:", errorText);
-      onError("Something went wrong. Please try again.");
-      return;
-    }
+    if (error) throw error;
 
-    const data = await resp.json();
-    console.log("Chat API response:", data);
-    
-    const responseText = data.response || "I apologize, I couldn't process your request.";
+    const responseText =
+      data?.response ||
+      "Thanks for reaching out. A Jersey Auto Lease broker can help with inventory, payments, approval steps, or delivery.";
     onResponse(responseText, {
-      needs_human: data.needs_human,
-      intent: data.intent,
-      priority: data.priority,
+      needs_human: data?.needs_human,
+      intent: data?.intent,
+      priority: data?.priority,
     });
   } catch (error) {
-    console.error("Chat error:", error);
     onError("Connection error. Please try again.");
   }
 }
@@ -290,6 +278,7 @@ export function ChatButton() {
               <Button
                 onClick={handleSend}
                 size="icon"
+                aria-label="Send chat message"
                 className="rounded-full h-10 w-10 bg-primary hover:bg-primary/90 shrink-0"
                 disabled={!inputValue.trim() || isTyping}
               >

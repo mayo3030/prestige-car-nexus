@@ -4,4 +4,4 @@ project_id = "cdmqpacldocawukzjxna"
 verify_jwt = false
 
 [functions.n8n-proxy]
-verify_jwt = false
+verify_jwt = true

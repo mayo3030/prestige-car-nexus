@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, User, Heart, LayoutDashboard } from "lucide-react";
+import { Menu, X, User, Heart, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import logo from "@/assets/jersey-auto-lease-logo.png";
@@ -58,15 +58,16 @@ export function Navbar() {
 
           {/* Desktop Actions */}
           <div className="hidden lg:flex items-center gap-3">
-            <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
+            <Button variant="ghost" size="icon" aria-label="Saved vehicles" className="text-muted-foreground hover:text-foreground">
               <Heart className="h-5 w-5" />
             </Button>
-            <Link to="/admin">
-              <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground" title="Admin Dashboard">
-                <LayoutDashboard className="h-5 w-5" />
+            <Link to="/admin/login">
+              <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground gap-2">
+                <Lock className="h-4 w-4" />
+                Staff
               </Button>
             </Link>
-            <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
+            <Button variant="ghost" size="icon" aria-label="Customer account" className="text-muted-foreground hover:text-foreground">
               <User className="h-5 w-5" />
             </Button>
             <Link to="/financing">
@@ -78,6 +79,8 @@ export function Navbar() {
 
           {/* Mobile Menu Button */}
           <button
+            type="button"
+            aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
             onClick={() => setIsOpen(!isOpen)}
             className="lg:hidden p-2 text-foreground"
           >
@@ -105,17 +108,17 @@ export function Navbar() {
                 </Link>
               ))}
               <Link
-                to="/admin"
+                to="/admin/login"
                 onClick={() => setIsOpen(false)}
                 className={cn(
                   "px-4 py-3 text-base font-medium rounded-lg transition-colors flex items-center gap-2",
-                  location.pathname === "/admin"
+                  location.pathname.startsWith("/admin")
                     ? "bg-primary/10 text-primary"
                     : "text-muted-foreground hover:bg-secondary hover:text-foreground"
                 )}
               >
-                <LayoutDashboard className="h-5 w-5" />
-                Admin Dashboard
+                <Lock className="h-5 w-5" />
+                Staff Sign In
               </Link>
               <div className="flex gap-3 mt-4 px-4">
                 <Button variant="outline" className="flex-1 rounded-full">

@@ -2,24 +2,24 @@ import { Star, Quote } from "lucide-react";
 
 const testimonials = [
   {
-    name: "James Morrison",
-    role: "Collector, New York",
+    name: "Daniel Rivera",
+    role: "Lease Client, Hoboken",
     avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200",
-    content: "Prestige Motors made acquiring my dream Ferrari an absolute pleasure. Their concierge team handled everything from inspection to delivery with impeccable professionalism.",
+    content: "Jersey Auto Lease compared several dealer quotes and delivered a clean lease structure without making me spend a Saturday at a showroom.",
     rating: 5,
   },
   {
-    name: "Victoria Chen",
-    role: "Dealer, Los Angeles",
+    name: "Alyssa Kim",
+    role: "SUV Buyer, Fort Lee",
     avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200",
-    content: "As a dealer, I've sold over 50 vehicles through this platform. The auction system is seamless, and the exposure to qualified buyers is unmatched in the industry.",
+    content: "The broker desk gave me payment options, delivery timing, and the paperwork checklist in one place. It felt organized and transparent.",
     rating: 5,
   },
   {
-    name: "Robert Blackwell",
-    role: "Enthusiast, London",
+    name: "Michael Stern",
+    role: "Trade-In Client, Paramus",
     avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=200",
-    content: "The vehicle history reports and inspection services gave me complete confidence in my purchase. Bought a Porsche GT3 and it arrived exactly as described.",
+    content: "They helped review my trade, compare payoff numbers, and find a better monthly payment than I expected from walking into one dealer.",
     rating: 5,
   },
 ];
@@ -37,8 +37,7 @@ export function TestimonialsSection() {
             What Our Clients Say
           </h2>
           <p className="text-muted-foreground mt-4">
-            Join thousands of satisfied collectors, dealers, and enthusiasts 
-            who trust Prestige Motors for their automotive needs.
+            Real broker workflows matter: quote clarity, fast follow-up, and a clean path from vehicle interest to delivery.
           </p>
         </div>
 

@@ -29,8 +29,8 @@ const services = [
   {
     icon: Truck,
     title: "Free Home Delivery",
-    description: "Get your new car delivered right to your doorstep at no extra cost. Nationwide delivery available.",
-    href: "/shipping",
+    description: "Coordinate delivery to your home after approval, paperwork, and final dealer confirmation.",
+    href: "/contact",
   },
   {
     icon: Headphones,

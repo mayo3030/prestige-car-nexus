@@ -2,10 +2,10 @@ import { Layout } from "@/components/layout/Layout";
 import { Shield, Users, Globe, Award, CheckCircle, Target, Heart } from "lucide-react";
 
 const stats = [
-  { value: "8,000+", label: "Cars Available Online" },
-  { value: "150", label: "Partner Dealerships" },
-  { value: "1,000+", label: "Satisfied Customers" },
-  { value: "100%", label: "Customer Satisfaction" },
+  { value: "24h", label: "Target Quote Window" },
+  { value: "NJ", label: "Broker Service Area" },
+  { value: "0", label: "Required Dealer Visits" },
+  { value: "1", label: "Centralized Client Pipeline" },
 ];
 
 const values = [
