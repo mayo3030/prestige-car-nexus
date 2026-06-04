@@ -6,8 +6,8 @@ import { Slider } from "@/components/ui/slider";
 import { Calculator, DollarSign, Percent, Clock, Info } from "lucide-react";
 
 const Financing = () => {
-  const [vehiclePrice, setVehiclePrice] = useState(250000);
-  const [downPayment, setDownPayment] = useState(50000);
+  const [vehiclePrice, setVehiclePrice] = useState(33950);
+  const [downPayment, setDownPayment] = useState(5000);
   const [loanTerm, setLoanTerm] = useState(60);
   const [interestRate, setInterestRate] = useState(6.5);
 
