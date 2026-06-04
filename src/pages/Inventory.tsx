@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Link } from "react-router-dom";
-import { Search, Filter, Grid, List, Heart, Gauge, Calendar, MapPin, X } from "lucide-react";
+import { Search, Filter, Grid, List, Heart, Gauge, Calendar, MapPin, X, Settings, Fuel as FuelIcon } from "lucide-react";
 import { Car, getCars, initCarStore } from "@/lib/carStore";
 import { getMakes } from "@/lib/vehicleData";
 
@@ -21,7 +21,7 @@ function CarCard({ car, view }: { car: Car; view: "grid" | "list" }) {
     return (
       <div className="glass-card rounded-xl overflow-hidden luxury-border transition-all duration-300 hover:border-champagne/30 flex">
         <div className="w-60 shrink-0 relative overflow-hidden">
-          <img src={car.image} alt={car.title} className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
+          <img src={car.image} alt={car.title} className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" onError={(e) => { (e.target as HTMLImageElement).src = "https://placehold.co/400x300/1a1a1a/cccccc?text=No+Image"; }} />
           {car.featured && (
             <Badge className="absolute top-3 left-3 bg-gradient-to-r from-champagne to-gold text-black border-0 text-xs">Featured</Badge>
           )}
@@ -63,15 +63,27 @@ function CarCard({ car, view }: { car: Car; view: "grid" | "list" }) {
   }
 
   return (
-    <div className="group glass-card rounded-2xl overflow-hidden luxury-border transition-all duration-300 hover:border-champagne/30">
+    <div className="group glass-card rounded-2xl overflow-hidden luxury-border transition-all duration-300 hover:border-champagne/30 hover:shadow-lg hover:shadow-champagne/5">
       <div className="relative aspect-[4/3] overflow-hidden">
-        <img src={car.image} alt={car.title} className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
-        <div className="absolute top-3 left-3 flex gap-2">
-          {car.featured && <Badge className="bg-gradient-to-r from-champagne to-gold text-black border-0">Featured</Badge>}
-          {car.auction && <Badge className="bg-red-500/90 text-white border-0">Live Auction</Badge>}
+        <img src={car.image} alt={car.title} className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110" onError={(e) => { (e.target as HTMLImageElement).src = "https://placehold.co/800x600/1a1a1a/cccccc?text=No+Image"; }} />
+        <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent" />
+        
+        {/* Hover overlay with quick specs */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-5">
+          <div className="text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+            <div className="flex items-center gap-4 text-xs">
+              {car.transmission && <span>{car.transmission}</span>}
+              {car.fuelType && <span>{car.fuelType}</span>}
+              {car.bodyStyle && <span>{car.bodyStyle}</span>}
+            </div>
+          </div>
         </div>
-        <button className="absolute top-3 right-3 p-2 rounded-full bg-black/30 text-white/70 hover:text-champagne transition-colors">
+        
+        <div className="absolute top-3 left-3 flex gap-2">
+          {car.featured && <Badge className="bg-gradient-to-r from-champagne to-gold text-black border-0 shadow-lg shadow-champagne/20">Featured</Badge>}
+          {car.auction && <Badge className="bg-red-500/90 text-white border-0 shadow-lg">Live Auction</Badge>}
+        </div>
+        <button className="absolute top-3 right-3 p-2 rounded-full bg-black/30 backdrop-blur-sm border border-white/10 text-white/70 hover:text-champagne hover:border-champagne/50 transition-all duration-300 opacity-0 group-hover:opacity-100">
           <Heart className="h-4 w-4" />
         </button>
       </div>
@@ -89,14 +101,36 @@ function CarCard({ car, view }: { car: Car; view: "grid" | "list" }) {
           <span className="flex items-center gap-1"><Gauge className="h-3 w-3 text-champagne/70" /> {car.mileage.toLocaleString()} mi</span>
           <span className="flex items-center gap-1"><MapPin className="h-3 w-3 text-champagne/70" /> {car.location}</span>
         </div>
+        
+        {/* Additional specs row */}
+        {(car.transmission || car.fuelType) && (
+          <div className="flex gap-2 mt-2">
+            {car.transmission && (
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary/50 text-[10px] text-muted-foreground">
+                <Settings className="h-2.5 w-2.5 text-champagne/70" />
+                {car.transmission}
+              </span>
+            )}
+            {car.fuelType && (
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary/50 text-[10px] text-muted-foreground">
+                <FuelIcon className="h-2.5 w-2.5 text-champagne/70" />
+                {car.fuelType}
+              </span>
+            )}
+          </div>
+        )}
+        
         <div className="flex items-center justify-between mt-4 pt-3 border-t border-white/[0.06]">
           <div className="text-lg font-bold text-champagne">${car.price.toLocaleString()}</div>
           <Link to={`/vehicle/${car.id}`}>
-            <Button variant="outline" size="sm" className="border-champagne/30 text-champagne hover:bg-champagne hover:text-black rounded-full text-xs">
+            <Button variant="outline" size="sm" className="border-champagne/30 text-champagne hover:bg-champagne hover:text-black rounded-full text-xs transition-all duration-300">
               View Details
             </Button>
           </Link>
         </div>
+        
+        {/* Bottom gold accent on hover */}
+        <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-champagne/40 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
       </div>
     </div>
   );
@@ -106,7 +140,7 @@ export default function Inventory() {
   const [cars, setCars] = useState<Car[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [view, setView] = useState<"grid" | "list">("grid");
-  const [priceRange, setPriceRange] = useState([0, 4000000]);
+  const [priceRange, setPriceRange] = useState([0, 65000]);
   const [selectedMake, setSelectedMake] = useState("All Makes");
   const [sort, setSort] = useState("newest");
 
