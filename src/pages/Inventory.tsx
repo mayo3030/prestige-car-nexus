@@ -14,6 +14,7 @@ import { Slider } from "@/components/ui/slider";
 import { Link } from "react-router-dom";
 import { Search, Filter, Grid, List, Heart, Gauge, Calendar, MapPin, X } from "lucide-react";
 import { Car, getCars, initCarStore } from "@/lib/carStore";
+import { getMakes } from "@/lib/vehicleData";
 
 function CarCard({ car, view }: { car: Car; view: "grid" | "list" }) {
   if (view === "list") {
@@ -114,7 +115,7 @@ export default function Inventory() {
     setCars(getCars());
   }, []);
 
-  const makes = ["All Makes", ...new Set(cars.map((c) => c.make))];
+  const makes = ["All Makes", ...getMakes()];
 
   const filtered = cars
     .filter((c) => {

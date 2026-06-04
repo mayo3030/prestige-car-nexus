@@ -38,13 +38,13 @@ export function Navbar() {
       <div className="h-[1px] bg-gradient-to-r from-transparent via-champagne/30 to-transparent" />
       
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-28">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 group">
             <img 
               src={logo} 
               alt="Jersey Auto Lease" 
-              className="h-12 w-auto transition-all duration-500 group-hover:scale-105"
+              className="h-20 w-auto transition-all duration-500 group-hover:scale-105 drop-shadow-lg"
             />
           </Link>
 

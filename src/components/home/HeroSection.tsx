@@ -10,8 +10,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { getMakes, getModels } from "@/lib/vehicleData";
 
-const makes = ["Toyota", "Honda", "Hyundai", "BMW", "Mercedes-Benz", "Nissan", "Ford", "Chevrolet", "Kia", "Mazda"];
 const priceRanges = [
   { label: "Under $15K", value: "0-15000" },
   { label: "$15K - $25K", value: "15000-25000" },
@@ -60,11 +60,31 @@ function AnimatedCounter({ target, suffix = "" }: { target: number; suffix?: str
 
 export function HeroSection() {
   const [searchType, setSearchType] = useState<"buy" | "lease">("buy");
+  const [selectedMake, setSelectedMake] = useState("");
+  const [selectedModel, setSelectedModel] = useState("");
+  const makes = getMakes();
+  const models = selectedMake ? getModels(selectedMake) : [];
 
   return (
     <section className="relative min-h-screen md:min-h-[90vh] flex items-center justify-center overflow-hidden">
-      {/* Premium animated gradient background */}
-      <div className="absolute inset-0 gradient-hero" />
+      {/* Hero background video */}
+      <div className="absolute inset-0">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-cover"
+          poster="/images/hero-bg.jpg"
+        >
+          <source src="/videos/hero-bg.mp4" type="video/mp4" />
+        </video>
+        {/* Dark overlay for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-black/60" />
+      </div>
+      
+      {/* Premium animated gradient overlay */}
+      <div className="absolute inset-0 gradient-hero opacity-60" />
 
       {/* Floating light orbs */}
       <div className="absolute inset-0 overflow-hidden">
@@ -185,25 +205,30 @@ export function HeroSection() {
 
               {/* Search Fields */}
               <div className="space-y-3 md:space-y-4">
-                <Select>
+                <Select value={selectedMake} onValueChange={(v) => { setSelectedMake(v); setSelectedModel(""); }}>
                   <SelectTrigger className="h-10 md:h-12 bg-secondary border-border rounded-xl text-sm">
                     <SelectValue placeholder="Select Make" />
                   </SelectTrigger>
                   <SelectContent>
                     {makes.map((make) => (
-                      <SelectItem key={make} value={make.toLowerCase()}>
+                      <SelectItem key={make} value={make}>
                         {make}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
 
-                <Select>
+                <Select value={selectedModel} onValueChange={setSelectedModel} disabled={!selectedMake}>
                   <SelectTrigger className="h-10 md:h-12 bg-secondary border-border rounded-xl text-sm">
-                    <SelectValue placeholder="Select Model" />
+                    <SelectValue placeholder={selectedMake ? "Select Model" : "Select Make First"} />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Models</SelectItem>
+                    {models.map((model) => (
+                      <SelectItem key={model} value={model}>
+                        {model}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
 

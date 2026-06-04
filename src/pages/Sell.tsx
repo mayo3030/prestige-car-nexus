@@ -12,9 +12,10 @@ import {
 } from "@/components/ui/select";
 import { Camera, Upload, Check, ArrowRight, Shield, Globe, DollarSign } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { getMakes, YEARS } from "@/lib/vehicleData";
 
-const makes = ["Ferrari", "Lamborghini", "Porsche", "Rolls-Royce", "Bentley", "McLaren", "Aston Martin", "Bugatti", "Mercedes-Benz", "BMW"];
-const years = Array.from({ length: 30 }, (_, i) => (2024 - i).toString());
+const makes = getMakes();
+const years = YEARS;
 
 const Sell = () => {
   const [step, setStep] = useState(1);

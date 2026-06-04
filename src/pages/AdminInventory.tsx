@@ -17,6 +17,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import type { Car } from "@/lib/carStore";
 import { getCars, addCar, updateCar, deleteCar, initCarStore } from "@/lib/carStore";
+import { getMakes, getModels } from "@/lib/vehicleData";
 
 const emptyForm: Omit<Car, "id"> = {
   title: "", make: "", model: "", year: new Date().getFullYear(),
@@ -233,12 +234,30 @@ export default function AdminInventory() {
 
             <div>
               <label className="text-xs text-muted-foreground block mb-1.5">Make *</label>
-              <Input value={form.make} onChange={(e) => setForm({ ...form, make: e.target.value })} placeholder="e.g. Ferrari" className="bg-white/[0.03] border-white/10" />
+              <Select value={form.make} onValueChange={(v) => setForm({ ...form, make: v, model: "" })}>
+                <SelectTrigger className="bg-white/[0.03] border-white/10">
+                  <SelectValue placeholder="Select Make" />
+                </SelectTrigger>
+                <SelectContent>
+                  {getMakes().map((m) => (
+                    <SelectItem key={m} value={m}>{m}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             <div>
               <label className="text-xs text-muted-foreground block mb-1.5">Model *</label>
-              <Input value={form.model} onChange={(e) => setForm({ ...form, model: e.target.value })} placeholder="e.g. SF90 Stradale" className="bg-white/[0.03] border-white/10" />
+              <Select value={form.model} onValueChange={(v) => setForm({ ...form, model: v })} disabled={!form.make}>
+                <SelectTrigger className="bg-white/[0.03] border-white/10">
+                  <SelectValue placeholder={form.make ? "Select Model" : "Select Make First"} />
+                </SelectTrigger>
+                <SelectContent>
+                  {getModels(form.make).map((m) => (
+                    <SelectItem key={m} value={m}>{m}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             <div>
