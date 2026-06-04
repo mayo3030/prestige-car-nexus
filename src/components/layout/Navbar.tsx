@@ -92,7 +92,7 @@ export function Navbar() {
               <User className="h-5 w-5" />
             </Button>
             <Link to="/financing">
-              <Button className="bg-gradient-to-r from-champagne to-gold text-black hover:opacity-90 px-6 rounded-full font-semibold shadow-lg shadow-champagne/20 animate-gold-glow">
+              <Button className="bg-gradient-to-r from-champagne to-champagne-dark text-white hover:brightness-110 px-6 rounded-full font-semibold shadow-lg shadow-red-600/30 animate-gold-glow">
                 Get Approved
               </Button>
             </Link>

@@ -13,7 +13,7 @@
     --popover: 0 0% 7%;
     --popover-foreground: 0 0% 96%;
     
-    --primary: 0 75% 52%;
+    --primary: 0 85% 56%;
     --primary-foreground: 0 0% 100%;
     
     --secondary: 0 0% 12%;
@@ -22,7 +22,7 @@
     --muted: 0 0% 14%;
     --muted-foreground: 0 0% 55%;
     
-    --accent: 0 75% 52%;
+    --accent: 0 85% 56%;
     --accent-foreground: 0 0% 100%;
     
     --destructive: 0 84% 60%;
@@ -30,16 +30,16 @@
     
     --border: 0 0% 16%;
     --input: 0 0% 12%;
-    --ring: 0 75% 52%;
+    --ring: 0 85% 56%;
     
     --radius: 0.75rem;
     
-    /* Red accent palette */
-    --champagne: 0 75% 52%;
-    --champagne-light: 0 75% 65%;
-    --champagne-dark: 0 70% 40%;
-    --gold: 355 70% 45%;
-    --gold-glow-color: 0 75% 55%;
+    /* Red accent palette — matching logo branding */
+    --champagne: 0 90% 58%;
+    --champagne-light: 0 90% 70%;
+    --champagne-dark: 0 85% 42%;
+    --gold: 355 75% 45%;
+    --gold-glow-color: 0 90% 60%;
     --rose-gold: 350 50% 55%;
     
     --sidebar-background: 0 0% 5%;
@@ -106,8 +106,8 @@
 @layer components {
   .gradient-hero {
     background: 
-      radial-gradient(ellipse 80% 60% at 20% 30%, hsl(var(--champagne) / 0.04) 0%, transparent 60%),
-      radial-gradient(ellipse 60% 50% at 80% 70%, hsl(var(--gold) / 0.03) 0%, transparent 50%),
+      radial-gradient(ellipse 60% 45% at 50% 35%, hsl(var(--champagne) / 0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 45% 35% at 70% 65%, hsl(var(--gold) / 0.08) 0%, transparent 50%),
       linear-gradient(135deg, 
         hsl(0 0% 2%) 0%, 
         hsl(0 0% 4%) 50%, 
@@ -136,12 +136,12 @@
   }
   
   .champagne-glow {
-    box-shadow: 0 0 60px hsl(var(--champagne) / 0.15),
-                0 0 100px hsl(var(--champagne) / 0.07);
+    box-shadow: 0 0 80px hsl(var(--champagne) / 0.2),
+                0 0 150px hsl(var(--champagne) / 0.08);
   }
   
   .gold-glow-box {
-    box-shadow: 0 0 40px hsl(var(--gold) / 0.2);
+    box-shadow: 0 0 50px hsl(var(--gold) / 0.25);
   }
   
   .luxury-border {

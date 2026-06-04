@@ -82,8 +82,8 @@ export function HeroSection() {
         </video>
         {/* Dark overlay for text readability */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/30 to-black/65" />
-        {/* Center brightness boost for watermark visibility */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,0.06)_0%,_transparent_60%)]" />
+        {/* Center brightness boost for red watermark visibility */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(220,30,30,0.07)_0%,_transparent_60%)]" />
       </div>
       
       {/* Premium animated gradient overlay */}
@@ -91,14 +91,14 @@ export function HeroSection() {
 
       {/* Floating light orbs */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="orb orb-1 w-[500px] h-[500px] bg-champagne/6 -top-20 left-[10%]" />
-        <div className="orb orb-2 w-[400px] h-[400px] bg-gold/5 top-[40%] -right-[10%]" />
-        <div className="orb orb-3 w-[350px] h-[350px] bg-champagne/4 bottom-0 left-[30%]" />
+        <div className="orb orb-1 w-[500px] h-[500px] bg-champagne/8 -top-20 left-[10%]" />
+        <div className="orb orb-2 w-[400px] h-[400px] bg-gold/6 top-[40%] -right-[10%]" />
+        <div className="orb orb-3 w-[350px] h-[350px] bg-champagne/6 bottom-0 left-[30%]" />
       </div>
 
       {/* Decorative Glow */}
-      <div className="absolute top-1/3 left-0 w-[300px] md:w-[600px] h-[300px] md:h-[600px] bg-champagne/8 rounded-full blur-[60px] md:blur-[100px]" />
-      <div className="hidden md:block absolute bottom-0 right-1/4 w-[300px] h-[300px] bg-gold/8 rounded-full blur-[80px]" />
+      <div className="absolute top-1/3 left-0 w-[300px] md:w-[600px] h-[300px] md:h-[600px] bg-champagne/10 rounded-full blur-[60px] md:blur-[100px]" />
+      <div className="hidden md:block absolute bottom-0 right-1/4 w-[300px] h-[300px] bg-gold/10 rounded-full blur-[80px]" />
 
       {/* Sparkle particles - hidden on mobile for performance */}
       <div className="hidden md:block absolute inset-0 pointer-events-none overflow-hidden">
@@ -116,22 +116,6 @@ export function HeroSection() {
             }}
           />
         ))}
-      </div>
-
-      {/* Large logo watermark - highest background layer */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[2]">
-        <div className="relative">
-          {/* Bright center spot to make the watermark visible */}
-          <div className="absolute inset-0 scale-[1.2] bg-white/[0.02] blur-[120px] rounded-full" />
-          {/* Warm glow behind logo */}
-          <div className="absolute inset-0 scale-[1.8] bg-white/10 blur-[100px] rounded-full" />
-          <img 
-            src={heroLogo} 
-            alt="" 
-            className="h-72 md:h-96 lg:h-[40rem] w-auto opacity-[0.35] md:opacity-[0.25] brightness-[2.5] contrast-[1.3] relative"
-            style={{ filter: "drop-shadow(0 0 80px rgba(255,200,100,0.15)) drop-shadow(0 0 40px rgba(255,255,255,0.1))" }}
-          />
-        </div>
       </div>
 
       {/* Content */}
@@ -160,13 +144,13 @@ export function HeroSection() {
 
             <div className="flex flex-col sm:flex-row flex-wrap gap-3 md:gap-4 mb-8 md:mb-10 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
               <Link to="/financing" className="w-full sm:w-auto">
-                <Button size="lg" className="w-full sm:w-auto bg-gradient-to-r from-champagne to-gold text-black hover:opacity-90 gap-2 rounded-full px-6 md:px-8 font-semibold shadow-lg shadow-champagne/20 text-sm md:text-base">
+                <Button size="lg" className="w-full sm:w-auto bg-gradient-to-r from-champagne to-champagne-dark text-white hover:brightness-110 gap-2 rounded-full px-6 md:px-8 font-semibold shadow-lg shadow-red-600/30 text-sm md:text-base">
                   Get Approved
                   <CheckCircle className="h-4 w-4 md:h-5 md:w-5" />
                 </Button>
               </Link>
               <Link to="/inventory" className="w-full sm:w-auto">
-                <Button size="lg" variant="outline" className="w-full sm:w-auto rounded-full px-6 md:px-8 border-champagne/40 text-champagne hover:bg-champagne/10 hover:text-champagne transition-all duration-300 text-sm md:text-base">
+                <Button size="lg" variant="outline" className="w-full sm:w-auto rounded-full px-6 md:px-8 border-red-500/50 text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-all duration-300 text-sm md:text-base">
                   Browse Inventory
                 </Button>
               </Link>
