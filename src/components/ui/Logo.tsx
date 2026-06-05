@@ -4,7 +4,7 @@ interface LogoProps {
 }
 
 export function Logo({ className = "h-10 w-auto", variant = "navbar" }: LogoProps) {
-  const textColor = variant === "hero" ? "#fff" : "#C8A25E";
+  const textColor = variant === "hero" ? "#fff" : "#CC2936";
 
   return (
     <svg

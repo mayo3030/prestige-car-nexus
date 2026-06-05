@@ -131,12 +131,12 @@ export default {
           "100%": { left: "100%" },
         },
         "gold-glow": {
-          "0%, 100%": { boxShadow: "0 0 20px rgba(212, 175, 55, 0.15)" },
-          "50%": { boxShadow: "0 0 50px rgba(212, 175, 55, 0.35)" },
+          "0%, 100%": { boxShadow: "0 0 20px rgba(204, 41, 54, 0.15)" },
+          "50%": { boxShadow: "0 0 50px rgba(204, 41, 54, 0.35)" },
         },
         "gold-pulse": {
-          "0%, 100%": { boxShadow: "inset 0 0 20px rgba(212, 175, 55, 0.05)" },
-          "50%": { boxShadow: "inset 0 0 30px rgba(212, 175, 55, 0.15)" },
+          "0%, 100%": { boxShadow: "inset 0 0 20px rgba(204, 41, 54, 0.05)" },
+          "50%": { boxShadow: "inset 0 0 30px rgba(204, 41, 54, 0.15)" },
         },
         "count-up": {
           "0%": { opacity: "0", transform: "translateY(20px)" },

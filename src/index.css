@@ -34,13 +34,13 @@
     
     --radius: 0.75rem;
     
-    /* Red accent palette — matching logo branding */
-    --champagne: 0 82% 52%;
-    --champagne-light: 0 85% 65%;
-    --champagne-dark: 0 80% 40%;
-    --gold: 355 70% 42%;
-    --gold-glow-color: 0 82% 55%;
-    --rose-gold: 350 50% 55%;
+    /* 🔴 Premium Red + Black palette */
+    --champagne: 0 78% 38%;
+    --champagne-light: 0 85% 55%;
+    --champagne-dark: 0 80% 28%;
+    --gold: 0 75% 45%;
+    --gold-glow-color: 0 85% 50%;
+    --rose-gold: 350 55% 45%;
     
     --sidebar-background: 0 0% 5%;
     --sidebar-foreground: 0 0% 96%;
@@ -106,25 +106,25 @@
 @layer components {
   .gradient-hero {
     background: 
-      radial-gradient(ellipse 60% 45% at 50% 35%, hsl(var(--champagne) / 0.08) 0%, transparent 60%),
-      radial-gradient(ellipse 45% 35% at 70% 65%, hsl(var(--gold) / 0.05) 0%, transparent 50%),
+      radial-gradient(ellipse 60% 45% at 50% 35%, hsl(var(--champagne) / 0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 45% 35% at 70% 65%, hsl(var(--champagne-dark) / 0.08) 0%, transparent 50%),
       linear-gradient(135deg, 
-        hsl(0 0% 2%) 0%, 
-        hsl(0 0% 4%) 50%, 
-        hsl(0 0% 2%) 100%
+        hsl(0 0% 1%) 0%, 
+        hsl(0 0% 3%) 50%, 
+        hsl(0 0% 1%) 100%
       );
   }
   
   .gradient-gold {
-    @apply bg-gradient-to-r from-champagne via-champagne to-champagne-dark;
+    @apply bg-gradient-to-r from-[#CC2936] via-[#E74C3C] to-[#A61B24];
   }
   
   .text-gradient {
-    @apply bg-gradient-to-r from-champagne via-champagne-light to-champagne-dark bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-[#CC2936] via-[#E74C3C] to-[#A61B24] bg-clip-text text-transparent;
   }
   
   .text-gradient-vertical {
-    @apply bg-gradient-to-b from-champagne-light via-champagne to-champagne-dark bg-clip-text text-transparent;
+    @apply bg-gradient-to-b from-[#E74C3C] via-[#CC2936] to-[#A61B24] bg-clip-text text-transparent;
   }
   
   .glass-card {
@@ -136,32 +136,32 @@
   }
   
   .champagne-glow {
-    box-shadow: 0 0 60px hsl(var(--champagne) / 0.15),
-                0 0 120px hsl(var(--champagne) / 0.06);
+    box-shadow: 0 0 60px hsl(var(--champagne) / 0.2),
+                0 0 120px hsl(var(--champagne) / 0.08);
   }
   
   .gold-glow-box {
-    box-shadow: 0 0 40px hsl(var(--gold) / 0.2);
+    box-shadow: 0 0 40px hsl(var(--champagne) / 0.25);
   }
   
   .luxury-border {
-    @apply border border-white/10 hover:border-champagne/30 transition-colors duration-500;
+    @apply border border-white/10 hover:border-[#CC2936]/40 transition-colors duration-500;
   }
   
   .luxury-border-gold {
-    @apply border border-champagne/30 hover:border-champagne/70 transition-colors duration-500;
+    @apply border border-[#CC2936]/30 hover:border-[#CC2936]/70 transition-colors duration-500;
   }
   
   .gold-divider {
-    @apply h-[1px] bg-gradient-to-r from-transparent via-champagne/30 to-transparent;
+    @apply h-[1px] bg-gradient-to-r from-transparent via-[#CC2936]/40 to-transparent;
   }
   
   .gold-divider-vertical {
-    @apply w-[1px] bg-gradient-to-b from-transparent via-champagne/30 to-transparent;
+    @apply w-[1px] bg-gradient-to-b from-transparent via-[#CC2936]/40 to-transparent;
   }
   
   .card-hover {
-    @apply transition-all duration-500 hover:translate-y-[-6px] hover:shadow-xl hover:shadow-red-900/10;
+    @apply transition-all duration-500 hover:translate-y-[-6px] hover:shadow-xl hover:shadow-[#CC2936]/15;
   }
 
   .reveal {
