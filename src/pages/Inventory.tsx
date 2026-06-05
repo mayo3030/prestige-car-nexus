@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,7 +14,6 @@ import { Slider } from "@/components/ui/slider";
 import { Link } from "react-router-dom";
 import { Search, Filter, Grid, List, Heart, Gauge, Calendar, MapPin, X, Settings, Fuel as FuelIcon } from "lucide-react";
 import { Car, getCars, initCarStore } from "@/lib/carStore";
-import { getMakes } from "@/lib/vehicleData";
 
 function CarCard({ car, view }: { car: Car; view: "grid" | "list" }) {
   if (view === "list") {
@@ -142,6 +141,8 @@ export default function Inventory() {
   const [view, setView] = useState<"grid" | "list">("grid");
   const [priceRange, setPriceRange] = useState([0, 120000]);
   const [selectedMake, setSelectedMake] = useState("All Makes");
+  const [selectedModel, setSelectedModel] = useState("All Models");
+  const [selectedYear, setSelectedYear] = useState("All Years");
   const [sort, setSort] = useState("newest");
 
   useEffect(() => {
@@ -149,11 +150,37 @@ export default function Inventory() {
     setCars(getCars());
   }, []);
 
-  const makes = ["All Makes", ...getMakes()];
+  // Derive distinct makes, models, and years from the cars data
+  const makes = useMemo(() => {
+    const m = new Set(cars.map(c => c.make));
+    return ["All Makes", ...Array.from(m).sort()];
+  }, [cars]);
+
+  const models = useMemo(() => {
+    let filtered = cars;
+    if (selectedMake !== "All Makes") {
+      filtered = filtered.filter(c => c.make === selectedMake);
+    }
+    const m = new Set(filtered.map(c => c.model));
+    return ["All Models", ...Array.from(m).sort()];
+  }, [cars, selectedMake]);
+
+  const years = useMemo(() => {
+    const y = new Set(cars.map(c => String(c.year)));
+    return ["All Years", ...Array.from(y).sort((a, b) => Number(b) - Number(a))];
+  }, [cars]);
+
+  // Auto-reset model when make changes
+  const handleMakeChange = (make: string) => {
+    setSelectedMake(make);
+    setSelectedModel("All Models");
+  };
 
   const filtered = cars
     .filter((c) => {
       if (selectedMake !== "All Makes" && c.make !== selectedMake) return false;
+      if (selectedModel !== "All Models" && c.model !== selectedModel) return false;
+      if (selectedYear !== "All Years" && String(c.year) !== selectedYear) return false;
       if (c.price < priceRange[0] || c.price > priceRange[1]) return false;
       if (!searchQuery) return true;
       const q = searchQuery.toLowerCase();
@@ -173,6 +200,16 @@ export default function Inventory() {
       }
     });
 
+  const clearAll = () => {
+    setSelectedMake("All Makes");
+    setSelectedModel("All Models");
+    setSelectedYear("All Years");
+    setPriceRange([0, 120000]);
+    setSearchQuery("");
+  };
+
+  const hasActiveFilters = selectedMake !== "All Makes" || selectedModel !== "All Models" || selectedYear !== "All Years" || priceRange[0] > 0 || priceRange[1] < 120000 || searchQuery;
+
   return (
     <Layout>
       <div className="min-h-screen pt-24 pb-16">
@@ -187,6 +224,7 @@ export default function Inventory() {
 
           {/* Search & Filters */}
           <div className="glass-card rounded-2xl p-4 md:p-6 mb-8 luxury-border">
+            {/* Row 1: Search + Grid/List */}
             <div className="flex flex-col md:flex-row gap-4">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -197,29 +235,6 @@ export default function Inventory() {
                   className="pl-9 bg-background/50 border-white/10"
                 />
               </div>
-              <Select value={selectedMake} onValueChange={setSelectedMake}>
-                <SelectTrigger className="w-full md:w-40 bg-background/50 border-white/10">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {makes.map((m) => (
-                    <SelectItem key={m} value={m}>
-                      {m}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Select value={sort} onValueChange={setSort}>
-                <SelectTrigger className="w-full md:w-40 bg-background/50 border-white/10">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="newest">Newest First</SelectItem>
-                  <SelectItem value="price-low">Price: Low to High</SelectItem>
-                  <SelectItem value="price-high">Price: High to Low</SelectItem>
-                  <SelectItem value="mileage">Lowest Mileage</SelectItem>
-                </SelectContent>
-              </Select>
               <div className="flex gap-1">
                 <Button
                   variant={view === "grid" ? "default" : "outline"}
@@ -240,6 +255,57 @@ export default function Inventory() {
               </div>
             </div>
 
+            {/* Row 2: Make + Model + Year + Sort */}
+            <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3">
+              <Select value={selectedMake} onValueChange={handleMakeChange}>
+                <SelectTrigger className="bg-background/50 border-white/10">
+                  <SelectValue placeholder="Make" />
+                </SelectTrigger>
+                <SelectContent>
+                  {makes.map((m) => (
+                    <SelectItem key={m} value={m}>
+                      {m}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select value={selectedModel} onValueChange={setSelectedModel}>
+                <SelectTrigger className="bg-background/50 border-white/10">
+                  <SelectValue placeholder="Model" />
+                </SelectTrigger>
+                <SelectContent>
+                  {models.map((m) => (
+                    <SelectItem key={m} value={m}>
+                      {m}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select value={selectedYear} onValueChange={setSelectedYear}>
+                <SelectTrigger className="bg-background/50 border-white/10">
+                  <SelectValue placeholder="Year" />
+                </SelectTrigger>
+                <SelectContent>
+                  {years.map((y) => (
+                    <SelectItem key={y} value={y}>
+                      {y}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select value={sort} onValueChange={setSort}>
+                <SelectTrigger className="bg-background/50 border-white/10">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="newest">Newest First</SelectItem>
+                  <SelectItem value="price-low">Price: Low to High</SelectItem>
+                  <SelectItem value="price-high">Price: High to Low</SelectItem>
+                  <SelectItem value="mileage">Lowest Mileage</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
             {/* Price Range */}
             <div className="mt-4 pt-4 border-t border-white/[0.06]">
               <div className="flex items-center justify-between mb-2">
@@ -251,25 +317,23 @@ export default function Inventory() {
               <Slider
                 value={priceRange}
                 onValueChange={setPriceRange}
-                max={4000000}
-                step={10000}
+                max={120000}
+                step={5000}
                 className="w-full"
               />
             </div>
           </div>
 
-          {/* Results count */}
+          {/* Results count + clear */}
           <div className="flex items-center justify-between mb-6">
             <p className="text-sm text-muted-foreground">
               Showing {filtered.length} vehicle{filtered.length !== 1 && "s"}
             </p>
-            <div className="flex gap-2">
-              {selectedMake !== "All Makes" && (
-                <Button variant="ghost" size="sm" onClick={() => setSelectedMake("All Makes")} className="text-xs">
-                  <X className="h-3 w-3 mr-1" /> Clear filters
-                </Button>
-              )}
-            </div>
+            {hasActiveFilters && (
+              <Button variant="ghost" size="sm" onClick={clearAll} className="text-xs">
+                <X className="h-3 w-3 mr-1" /> Clear All Filters
+              </Button>
+            )}
           </div>
 
           {/* Car Grid / List */}
@@ -290,6 +354,11 @@ export default function Inventory() {
           {filtered.length === 0 && (
             <div className="text-center py-20">
               <p className="text-muted-foreground">No vehicles match your search criteria.</p>
+              {hasActiveFilters && (
+                <Button variant="link" onClick={clearAll} className="text-champagne mt-2">
+                  Clear all filters
+                </Button>
+              )}
             </div>
           )}
         </div>
