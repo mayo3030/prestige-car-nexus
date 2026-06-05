@@ -163,7 +163,7 @@ export function HeroSection() {
             {/* Stats with animated counter */}
             <div className="flex flex-wrap items-center gap-4 sm:gap-6 md:gap-10 animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
               <div className="text-center sm:text-left">
-                <AnimatedCounter target={28} suffix="+" />
+                <AnimatedCounter target={104} suffix="+" />
                 <div className="text-[11px] sm:text-xs md:text-sm text-muted-foreground tracking-wide">Cars Available Online</div>
               </div>
               <div className="hidden sm:block w-[1px] h-10 bg-gradient-to-b from-champagne/30 to-transparent self-center" />
