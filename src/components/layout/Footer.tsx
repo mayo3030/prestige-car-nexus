@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Mail, Phone, MapPin, Facebook, Instagram, Twitter, Youtube } from "lucide-react";
-import logo from "@/assets/jersey-auto-lease-logo.png";
+import { Logo } from "@/components/ui/Logo";
 
 const footerLinks = {
   inventory: [
@@ -41,7 +41,7 @@ export function Footer() {
           {/* Brand Column */}
           <div className="lg:col-span-2">
             <Link to="/" className="flex items-center gap-3 mb-6 group">
-              <img src={logo} alt="Jersey Auto Lease" className="h-20 w-auto transition-all duration-500 group-hover:scale-105 drop-shadow-lg" />
+              <Logo variant="footer" className="h-16 w-auto transition-all duration-500 group-hover:scale-105" />
             </Link>
             <p className="text-muted-foreground mb-6 max-w-sm leading-relaxed">
               We provide quality service to our clients who are looking to purchase a new car 

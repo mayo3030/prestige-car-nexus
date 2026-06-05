@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { getMakes, getModels } from "@/lib/vehicleData";
-import heroLogo from "@/assets/jersey-auto-lease-logo.png";
+import { Logo } from "@/components/ui/Logo";
 
 const priceRanges = [
   { label: "Under $15K", value: "0-15000" },
@@ -123,11 +123,7 @@ export function HeroSection() {
           {/* Left Content */}
           <div className="max-w-xl">
             <div className="flex items-center gap-3 mb-4 md:mb-5 animate-fade-in-up">
-              <img 
-                src={heroLogo} 
-                alt="Jersey Auto Lease" 
-                className="h-10 md:h-12 w-auto opacity-90"
-              />
+              <Logo variant="hero" className="h-8 md:h-10 w-auto" />
               <Sparkles className="h-3 w-3 md:h-4 md:w-4 text-champagne" />
               <span className="text-champagne text-[10px] md:text-sm uppercase tracking-[0.15em] md:tracking-[0.2em] font-medium">
                 Premium Auto Marketplace

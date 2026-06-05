@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X, User, Heart, LayoutDashboard, Car } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import logo from "@/assets/jersey-auto-lease-logo.png";
+import { Logo } from "@/components/ui/Logo";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -41,11 +41,7 @@ export function Navbar() {
         <div className="flex items-center justify-between h-28">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 group">
-            <img 
-              src={logo} 
-              alt="Jersey Auto Lease" 
-              className="h-20 w-auto transition-all duration-500 group-hover:scale-105 drop-shadow-lg"
-            />
+            <Logo variant="navbar" className="h-16 w-auto transition-all duration-500 group-hover:scale-105" />
           </Link>
 
           {/* Desktop Navigation */}
