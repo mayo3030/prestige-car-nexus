@@ -140,7 +140,7 @@ export default function Inventory() {
   const [cars, setCars] = useState<Car[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [view, setView] = useState<"grid" | "list">("grid");
-  const [priceRange, setPriceRange] = useState([0, 65000]);
+  const [priceRange, setPriceRange] = useState([0, 120000]);
   const [selectedMake, setSelectedMake] = useState("All Makes");
   const [sort, setSort] = useState("newest");
 
